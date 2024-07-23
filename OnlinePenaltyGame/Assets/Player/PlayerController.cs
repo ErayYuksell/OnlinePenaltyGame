@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] BallController ballController;
+    [SerializeField] GoalKeeperController goalKeeperController;
+
     [SerializeField] Animator animator;
     [SerializeField] AnimationClip penaltyKickAnim;
-    [SerializeField] BallController ballController;
     [SerializeField] Transform ball;
     [SerializeField] Transform goal;
 
@@ -35,6 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 direction = (goal.position - ball.position).normalized;
         ballController.KickBall(direction);
+        goalKeeperController.PlayBodyBlock();
     }
 
     // Animasyonun sonunda çaðrýlacak metod
