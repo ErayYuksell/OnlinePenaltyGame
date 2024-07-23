@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
     private Quaternion finalRotation;
     private bool animationFinished = false;
 
-
     void Update()
     {
         if (animationFinished)
@@ -26,11 +25,23 @@ public class PlayerController : MonoBehaviour
 
     public void Shoot() // button icinde 
     {
+        // Animasyonu oynat
         animator.Play(penaltyKickAnim.name);
         animationFinished = false;
 
+        // targetImage hareketini durdur ve pozisyon bilgisini al
+        GameManager.Instance.StopTargetImageMovement(out Vector3 targetPosition);
+        Debug.Log("Target Position: " + targetPosition);
+        GameManager.Instance.StopSliderArrowMovement(out Vector3 arrowPos);
+        Debug.Log("Slider Arrow Position: " + arrowPos);
+
+        // Renk bilgisi al ve iþleme devam et
+        string arrowColor = GameManager.Instance.GetSliderArrowColor();
+        Debug.Log("Slider Arrow Color: " + arrowColor);
+
         // Animasyonun ortasýnda topa vurulmasýný saðlamak için animasyon event ekleyin
     }
+
 
     // Animasyon Event tarafýndan çaðrýlacak metod
     public void OnKick()
