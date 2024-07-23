@@ -1,18 +1,50 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] Animator animator;
+    [SerializeField] AnimationClip penaltyKickAnim;
+    [SerializeField] BallController ballController;
+    [SerializeField] Transform ball;
+    [SerializeField] Transform goal;
 
-    // Update is called once per frame
+    private Vector3 finalPosition;
+    private Quaternion finalRotation;
+    private bool animationFinished = false;
+
+
     void Update()
     {
-        
+        if (animationFinished)
+        {
+            transform.position = finalPosition;
+            transform.rotation = finalRotation;
+        }
+    }
+
+    public void Shoot() // button icinde 
+    {
+        animator.Play(penaltyKickAnim.name);
+        animationFinished = false;
+
+        // Animasyonun ortasýnda topa vurulmasýný saðlamak için animasyon event ekleyin
+    }
+
+    // Animasyon Event tarafýndan çaðrýlacak metod
+    public void OnKick()
+    {
+        Vector3 direction = (goal.position - ball.position).normalized;
+        ballController.KickBall(direction);
+    }
+
+    // Animasyonun sonunda çaðrýlacak metod
+    public void OnAnimationComplete()
+    {
+        finalPosition = transform.position;
+        finalRotation = transform.rotation;
+        animationFinished = true;
+
+        // Idle state'e geçmeden önce pozisyonu ve rotasyonu sabitle
+        animator.SetBool("isIdle", true);
     }
 }
