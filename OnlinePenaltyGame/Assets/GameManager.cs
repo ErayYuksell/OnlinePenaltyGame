@@ -91,8 +91,6 @@ public class GameManager : MonoBehaviour
     }
     public Vector3 BlueColorOptions()
     {
-        Vector3 newPos = targetObj.transform.position + Random.insideUnitSphere * 2f;
-        Debug.Log("newPos" +newPos);
         return targetObj.transform.position + Random.insideUnitSphere * 2f;
     }
     // UI da bir target Image olusturup onun pointsler arasi hareket etmesini sagladim 
@@ -156,6 +154,7 @@ public class GameManager : MonoBehaviour
     {
         switch (GetSliderArrowColor())
         {
+            default: return 500f;
             case "Red":
                 kickForce = 500f;
                 break;
