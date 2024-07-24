@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -13,6 +14,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 finalPosition;
     private Quaternion finalRotation;
     private bool animationFinished = false;
+
+    Vector3 targetPosition;
 
     void Update()
     {
@@ -30,7 +33,7 @@ public class PlayerController : MonoBehaviour
         animationFinished = false;
 
         // targetImage hareketini durdur ve pozisyon bilgisini al
-        GameManager.Instance.StopTargetImageMovement(out Vector3 targetPosition);
+        targetPosition = GameManager.Instance.StopTargetImageMovement();
         Debug.Log("Target Position: " + targetPosition);
         GameManager.Instance.StopSliderArrowMovement(out Vector3 arrowPos);
         Debug.Log("Slider Arrow Position: " + arrowPos);
@@ -46,7 +49,7 @@ public class PlayerController : MonoBehaviour
     // Animasyon Event tarafýndan çaðrýlacak metod
     public void OnKick()
     {
-        Vector3 direction = (goal.position - ball.position).normalized;
+        Vector3 direction = (targetPosition - ball.position).normalized;
         ballController.KickBall(direction);
         goalKeeperController.PlayBodyBlock();
     }

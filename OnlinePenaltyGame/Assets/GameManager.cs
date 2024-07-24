@@ -74,10 +74,10 @@ public class GameManager : MonoBehaviour
                 });
     }
 
-    public void StopTargetImageMovement(out Vector3 targetPosition)
+    public Vector3 StopTargetImageMovement()
     {
         targetTween?.Kill(); // targetImage hareketini durdur
-        targetPosition = Camera.main.ScreenToWorldPoint(targetImage.position); // O anki pozisyon bilgisini al
+        return Camera.main.ScreenToWorldPoint(targetImage.position); // O anki pozisyon bilgisini al
     }
 
     //Slider
