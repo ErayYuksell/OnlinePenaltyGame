@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     public enum ShootColors { red, green, blue }
     public ShootColors shootColors;
 
+    float kickForce;
+
     private void Awake()
     {
         if (Instance == null)
@@ -41,7 +43,7 @@ public class GameManager : MonoBehaviour
         ChooseRandomPoint();
         MovementSliderArrow();
     }
-
+    // Target Movement
     public void ChooseRandomPoint(GameObject oldPoint1 = null, GameObject oldPoint2 = null)
     {
         if (shootPoints.Count < 2)
@@ -62,8 +64,6 @@ public class GameManager : MonoBehaviour
         MovementBetweenPoints(point1, point2);
     }
 
-
-
     public void MovementBetweenPoints(GameObject point1, GameObject point2)
     {
 
@@ -80,8 +80,20 @@ public class GameManager : MonoBehaviour
     public Vector3 StopTargetMovement()
     {
         targetTween?.Kill(); // targetImage hareketini durdur
-        FailShootMovement();
+        targetObj.gameObject.SetActive(false);
         return targetObj.position; // O anki pozisyon bilgisini al
+    }
+
+    // Slider Movement and Color options
+    public Vector3 FailShootMovement()
+    {
+        return failShootPoints[Random.Range(0, failShootPoints.Count)].gameObject.transform.position;
+    }
+    public Vector3 BlueColorOptions()
+    {
+        Vector3 newPos = targetObj.transform.position + Random.insideUnitSphere * 2f;
+        Debug.Log("newPos" +newPos);
+        return targetObj.transform.position + Random.insideUnitSphere * 2f;
     }
     // UI da bir target Image olusturup onun pointsler arasi hareket etmesini sagladim 
     //public void MovementBetweenPoints(GameObject point1, GameObject point2)
@@ -120,7 +132,6 @@ public class GameManager : MonoBehaviour
         arrowPos = sliderArrow.localPosition; // O anki pozisyon bilgisini al
     }
 
-    // Renk belirleme metodu
     public string GetSliderArrowColor()
     {
         Vector3 arrowPos = sliderArrow.position;
@@ -140,12 +151,25 @@ public class GameManager : MonoBehaviour
 
         return "Unknown";
     }
-    public void FailShootMovement()
+
+    public float BallMovementForceByColor()
     {
-        if (GetSliderArrowColor() == "Red")
+        switch (GetSliderArrowColor())
         {
-            targetObj.transform.position = failShootPoints[Random.Range(0, failShootPoints.Count)].gameObject.transform.position;
+            case "Red":
+                kickForce = 500f;
+                break;
+
+            case "Blue":
+                kickForce = 750f;
+                break;
+
+            case "Green":
+                kickForce = 1000f;
+                break;
+
         }
+        return kickForce;
     }
 
     private bool IsWithinBounds(Vector3 arrowPos, RectTransform rect)

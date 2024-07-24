@@ -857,7 +857,6 @@ MonoBehaviour:
   - {fileID: 1756708534}
   - {fileID: 254578336}
   failShootPoints:
-  - {fileID: 8343388570530544467}
   - {fileID: 8343388570530544466}
   - {fileID: 8343388570530544465}
   - {fileID: 8343388570530544464}
@@ -869,6 +868,7 @@ MonoBehaviour:
   redImage: {fileID: 2120249919}
   blueImage: {fileID: 268232308}
   greenImage: {fileID: 1747235075}
+  shootColors: 0
 --- !u!4 &906881038
 Transform:
   m_ObjectHideFlags: 0
@@ -2251,11 +2251,6 @@ GameObject:
 --- !u!1 &8343388570530544466 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2118288492932755824, guid: 7470e14080300df41838456987750abd, type: 3}
-  m_PrefabInstance: {fileID: 8343388570530544462}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8343388570530544467 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3219292998259597028, guid: 7470e14080300df41838456987750abd, type: 3}
   m_PrefabInstance: {fileID: 8343388570530544462}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8439465728738221009

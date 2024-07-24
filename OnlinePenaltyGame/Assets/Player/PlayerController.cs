@@ -17,6 +17,11 @@ public class PlayerController : MonoBehaviour
 
     Vector3 targetPosition;
 
+    GameManager gameManager;
+    private void Start()
+    {
+        gameManager = GameManager.Instance;
+    }
     void Update()
     {
         if (animationFinished)
@@ -33,29 +38,31 @@ public class PlayerController : MonoBehaviour
         animationFinished = false;
 
         // Renk bilgisi al ve iþleme devam et
-        string arrowColor = GameManager.Instance.GetSliderArrowColor();
+        string arrowColor = gameManager.GetSliderArrowColor();
         Debug.Log("Slider Arrow Color: " + arrowColor);
-        GameManager.Instance.StopSliderArrowMovement(out Vector3 arrowPos);
-        Debug.Log("Slider Arrow Position: " + arrowPos);
-
+        gameManager.StopSliderArrowMovement(out Vector3 arrowPos);
 
         // targetImage hareketini durdur ve pozisyon bilgisini al
-        targetPosition = GameManager.Instance.StopTargetMovement();
-        Debug.Log("Target Position: " + targetPosition);
 
+        targetPosition = gameManager.StopTargetMovement();
+        targetPosition = gameManager.GetSliderArrowColor() == "Red" ? gameManager.FailShootMovement() : targetPosition;
+        targetPosition = gameManager.GetSliderArrowColor() == "Blue" ? gameManager.BlueColorOptions() : targetPosition;
 
         // Animasyonun ortasýnda topa vurulmasýný saðlamak için animasyon event ekleyin
     }
+
 
 
     // Animasyon Event tarafýndan çaðrýlacak metod
     public void OnKick()
     {
         Vector3 direction = (targetPosition - ball.position).normalized;
-        ballController.KickBall(direction);
+        float kickForce = gameManager.BallMovementForceByColor();
+
+        ballController.KickBall(direction, kickForce);
         goalKeeperController.PlayBodyBlock();
     }
-   
+
 
     // Animasyonun sonunda çaðrýlacak metod
     public void OnAnimationComplete()
