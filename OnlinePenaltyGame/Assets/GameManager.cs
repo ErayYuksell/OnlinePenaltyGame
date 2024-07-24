@@ -8,8 +8,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     [Header("Points")]
     [SerializeField] List<GameObject> shootPoints = new List<GameObject>();
+    [SerializeField] List<GameObject> failShootPoints = new List<GameObject>();
     //[SerializeField] RectTransform targetImage;
-    [SerializeField] Transform targetObj;
+    public Transform targetObj;
     private Tween targetTween;
     [Header("Slider")]
     [SerializeField] RectTransform sliderArrow;
@@ -20,6 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] RectTransform redImage;
     [SerializeField] RectTransform blueImage;
     [SerializeField] RectTransform greenImage;
+    public enum ShootColors { red, green, blue }
+    public ShootColors shootColors;
 
     private void Awake()
     {
@@ -59,7 +62,7 @@ public class GameManager : MonoBehaviour
         MovementBetweenPoints(point1, point2);
     }
 
-    
+
 
     public void MovementBetweenPoints(GameObject point1, GameObject point2)
     {
@@ -77,6 +80,7 @@ public class GameManager : MonoBehaviour
     public Vector3 StopTargetMovement()
     {
         targetTween?.Kill(); // targetImage hareketini durdur
+        FailShootMovement();
         return targetObj.position; // O anki pozisyon bilgisini al
     }
     // UI da bir target Image olusturup onun pointsler arasi hareket etmesini sagladim 
@@ -135,6 +139,13 @@ public class GameManager : MonoBehaviour
         }
 
         return "Unknown";
+    }
+    public void FailShootMovement()
+    {
+        if (GetSliderArrowColor() == "Red")
+        {
+            targetObj.transform.position = failShootPoints[Random.Range(0, failShootPoints.Count)].gameObject.transform.position;
+        }
     }
 
     private bool IsWithinBounds(Vector3 arrowPos, RectTransform rect)

@@ -32,15 +32,17 @@ public class PlayerController : MonoBehaviour
         animator.Play(penaltyKickAnim.name);
         animationFinished = false;
 
-        // targetImage hareketini durdur ve pozisyon bilgisini al
-        targetPosition = GameManager.Instance.StopTargetMovement();
-        Debug.Log("Target Position: " + targetPosition);
-        GameManager.Instance.StopSliderArrowMovement(out Vector3 arrowPos);
-        Debug.Log("Slider Arrow Position: " + arrowPos);
-
         // Renk bilgisi al ve iþleme devam et
         string arrowColor = GameManager.Instance.GetSliderArrowColor();
         Debug.Log("Slider Arrow Color: " + arrowColor);
+        GameManager.Instance.StopSliderArrowMovement(out Vector3 arrowPos);
+        Debug.Log("Slider Arrow Position: " + arrowPos);
+
+
+        // targetImage hareketini durdur ve pozisyon bilgisini al
+        targetPosition = GameManager.Instance.StopTargetMovement();
+        Debug.Log("Target Position: " + targetPosition);
+
 
         // Animasyonun ortasýnda topa vurulmasýný saðlamak için animasyon event ekleyin
     }
@@ -53,6 +55,7 @@ public class PlayerController : MonoBehaviour
         ballController.KickBall(direction);
         goalKeeperController.PlayBodyBlock();
     }
+   
 
     // Animasyonun sonunda çaðrýlacak metod
     public void OnAnimationComplete()
