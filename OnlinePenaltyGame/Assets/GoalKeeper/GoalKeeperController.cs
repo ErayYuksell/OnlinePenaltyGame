@@ -4,7 +4,7 @@ public class GoalKeeperController : MonoBehaviour
 {
     [SerializeField] Animator animator;
     [SerializeField] AnimationClip bodyBlockAnim;
-    [SerializeField] Transform yellowAreaTransform; // Sarý alaný temsil eden transform
+    [SerializeField] Transform yellowAreaParentTransform; // Sarý alaný temsil eden transform
 
     private Vector3 finalPosition;
     private Quaternion finalRotation;
@@ -33,7 +33,8 @@ public class GoalKeeperController : MonoBehaviour
 
     public void RotateYellowArea(float rotationFactor)
     {
-        float rotationAngle = Mathf.Lerp(-45f, 45f, rotationFactor); // -45 ile 45 derece arasýnda dönüþ
-        yellowAreaTransform.localEulerAngles = new Vector3(0, 0, rotationAngle);
+        // rotationFactor'ü tersine çevirerek sarý alanýn doðru yönde hareket etmesini saðlýyoruz
+        float rotationAngle = Mathf.Lerp(-60f, 60f, -rotationFactor * 0.5f + 0.5f);
+        yellowAreaParentTransform.localEulerAngles = new Vector3(0, 0, rotationAngle);
     }
 }
