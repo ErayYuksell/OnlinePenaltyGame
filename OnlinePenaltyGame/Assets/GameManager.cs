@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     [Header("Points")]
     [SerializeField] List<GameObject> shootPoints = new List<GameObject>();
-    [SerializeField] RectTransform targetImage;
+    //[SerializeField] RectTransform targetImage;
+    [SerializeField] Transform targetObj;
     private Tween targetTween;
     [Header("Slider")]
     [SerializeField] RectTransform sliderArrow;
@@ -58,27 +59,47 @@ public class GameManager : MonoBehaviour
         MovementBetweenPoints(point1, point2);
     }
 
+    
+
     public void MovementBetweenPoints(GameObject point1, GameObject point2)
     {
-        Vector2 screenPos1 = Camera.main.WorldToScreenPoint(point1.transform.position); // world pos u olan normal objelerin posunu screen posa cevirip target Image uzerinden hareket ettiriyorum 
-        Vector2 screenPos2 = Camera.main.WorldToScreenPoint(point2.transform.position);
 
         targetTween?.Kill(); // Mevcut hareketi durdur
 
         Sequence sequence = DOTween.Sequence(); // dotween sirasi veya dizisi birden fazla dotween i birlikte kullanmak istiyorsan sirayla calisirlar 
-        targetTween = sequence.Append(targetImage.DOMove(screenPos1, 1f).SetEase(Ease.Linear))
-                .Append(targetImage.DOMove(screenPos2, 1f).SetEase(Ease.Linear))
+        targetTween = sequence.Append(targetObj.DOMove(point1.transform.position, 1f).SetEase(Ease.Linear))
+                .Append(targetObj.DOMove(point2.transform.position, 1f).SetEase(Ease.Linear))
                 .OnComplete(() =>
                 {
                     ChooseRandomPoint(point1, point2); // Hareket tamamlandýðýnda yeni iki nokta seçilir ve hareket tekrar baþlar
                 });
     }
-
-    public Vector3 StopTargetImageMovement()
+    public Vector3 StopTargetMovement()
     {
         targetTween?.Kill(); // targetImage hareketini durdur
-        return Camera.main.ScreenToWorldPoint(targetImage.position); // O anki pozisyon bilgisini al
+        return targetObj.position; // O anki pozisyon bilgisini al
     }
+    // UI da bir target Image olusturup onun pointsler arasi hareket etmesini sagladim 
+    //public void MovementBetweenPoints(GameObject point1, GameObject point2)
+    //{
+    //    Vector2 screenPos1 = Camera.main.WorldToScreenPoint(point1.transform.position); // world pos u olan normal objelerin posunu screen posa cevirip target Image uzerinden hareket ettiriyorum 
+    //    Vector2 screenPos2 = Camera.main.WorldToScreenPoint(point2.transform.position);
+
+    //    targetTween?.Kill(); // Mevcut hareketi durdur
+
+    //    Sequence sequence = DOTween.Sequence(); // dotween sirasi veya dizisi birden fazla dotween i birlikte kullanmak istiyorsan sirayla calisirlar 
+    //    targetTween = sequence.Append(targetImage.DOMove(screenPos1, 1f).SetEase(Ease.Linear))
+    //            .Append(targetImage.DOMove(screenPos2, 1f).SetEase(Ease.Linear))
+    //            .OnComplete(() =>
+    //            {
+    //                ChooseRandomPoint(point1, point2); // Hareket tamamlandýðýnda yeni iki nokta seçilir ve hareket tekrar baþlar
+    //            });
+    //}
+    //public Vector3 StopTargetImageMovement()
+    //{
+    //    targetTween?.Kill(); // targetImage hareketini durdur
+    //    return Camera.main.ScreenToWorldPoint(targetImage.position); // O anki pozisyon bilgisini al
+    //}
 
     //Slider
 

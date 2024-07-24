@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
         animationFinished = false;
 
         // targetImage hareketini durdur ve pozisyon bilgisini al
-        targetPosition = GameManager.Instance.StopTargetImageMovement();
+        targetPosition = GameManager.Instance.StopTargetMovement();
         Debug.Log("Target Position: " + targetPosition);
         GameManager.Instance.StopSliderArrowMovement(out Vector3 arrowPos);
         Debug.Log("Slider Arrow Position: " + arrowPos);
