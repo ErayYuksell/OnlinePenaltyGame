@@ -5,7 +5,6 @@ public class BallController : MonoBehaviour
 {
     private Rigidbody rb;
 
-
     void Start()
     {
         rb = GetComponent<Rigidbody>();

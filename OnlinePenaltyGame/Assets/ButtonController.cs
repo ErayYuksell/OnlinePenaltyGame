@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
+    [SerializeField] GameObject goalkeeperAreaPanel;
     [SerializeField] RectTransform buttonRectTransform; // Butonun RectTransform'u
     [SerializeField] RectTransform sliderRectTransform; // Slider'ýn RectTransform'u
     [SerializeField] GoalKeeperController goalKeeperController; // GoalKeeperController referansý
@@ -43,6 +44,7 @@ public class ButtonController : MonoBehaviour, IDragHandler, IBeginDragHandler, 
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        goalkeeperAreaPanel.SetActive(false); // kaleci atlamadan paneli kapa 
         isDrag = false;
         buttonRectTransform.gameObject.GetComponent<Button>().interactable = false;
 

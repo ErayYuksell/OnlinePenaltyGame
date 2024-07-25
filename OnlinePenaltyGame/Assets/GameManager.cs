@@ -6,6 +6,7 @@ using DG.Tweening;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+
     [Header("Points")]
     [SerializeField] List<GameObject> shootPoints = new List<GameObject>();
     [SerializeField] List<GameObject> failShootPoints = new List<GameObject>();
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
         ChooseRandomPoint();
         MovementSliderArrow();
     }
-    // Target Movement
+    #region TargetMovement
     public void ChooseRandomPoint(GameObject oldPoint1 = null, GameObject oldPoint2 = null)
     {
         if (shootPoints.Count < 2)
@@ -93,6 +94,7 @@ public class GameManager : MonoBehaviour
     {
         return targetObj.transform.position + Random.insideUnitSphere * 2f;
     }
+
     // UI da bir target Image olusturup onun pointsler arasi hareket etmesini sagladim 
     //public void MovementBetweenPoints(GameObject point1, GameObject point2)
     //{
@@ -116,7 +118,9 @@ public class GameManager : MonoBehaviour
     //}
 
     //Slider
+    #endregion
 
+    #region SliderMovementAndColor
     public void MovementSliderArrow()
     {
         Vector3 startPos = new Vector3(sliderStart, sliderArrow.localPosition.y, sliderArrow.localPosition.z);
@@ -177,4 +181,5 @@ public class GameManager : MonoBehaviour
         rect.GetWorldCorners(corners); // bu fonksiyon ile rect objesinin 4 kenarininin tam olarak konumunu alabiliyorsun 
         return arrowPos.x >= corners[0].x && arrowPos.x <= corners[2].x;
     }
+    #endregion
 }
