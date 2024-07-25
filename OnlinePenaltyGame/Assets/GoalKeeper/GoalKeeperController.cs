@@ -4,6 +4,10 @@ public class GoalKeeperController : MonoBehaviour
 {
     [SerializeField] Animator animator;
     [SerializeField] AnimationClip bodyBlockAnim;
+    [SerializeField] AnimationClip bodyBlockRightAnim;
+    [SerializeField] AnimationClip divingSave;
+    [SerializeField] AnimationClip divingRightSave;
+    [SerializeField] AnimationClip catchAnim;
     [SerializeField] Transform yellowAreaParentTransform; // Sarý alaný temsil eden transform
 
     private Vector3 finalPosition;
@@ -22,6 +26,22 @@ public class GoalKeeperController : MonoBehaviour
     public void PlayBodyBlock()
     {
         animator.Play(bodyBlockAnim.name);
+    }
+    public void PlayBodyRightBlock()
+    {
+        animator.Play(bodyBlockRightAnim.name);
+    }
+    public void PlayDivingSave()
+    {
+        animator.Play(divingSave.name);
+    }
+    public void PlayDivingRightSave()
+    {
+        animator.Play(divingRightSave.name);
+    }
+    public void PlayCatch()
+    {
+        animator.Play(catchAnim.name);
     }
 
     public void OnAnimationComplete()

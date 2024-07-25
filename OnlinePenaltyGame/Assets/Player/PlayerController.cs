@@ -60,7 +60,9 @@ public class PlayerController : MonoBehaviour
         float kickForce = gameManager.BallMovementForceByColor();
 
         ballController.KickBall(direction, kickForce);
-        goalKeeperController.PlayBodyBlock();
+
+
+        //goalKeeperController.PlayBodyBlock();
     }
 
 
