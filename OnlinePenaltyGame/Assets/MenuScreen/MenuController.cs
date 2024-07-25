@@ -9,4 +9,8 @@ public class MenuController : MonoBehaviour
     {
         SceneManager.LoadScene("Game");
     }
+    public void TapToMultilayerButton()
+    {
+        SceneManager.LoadScene("Loading");
+    }
 }
