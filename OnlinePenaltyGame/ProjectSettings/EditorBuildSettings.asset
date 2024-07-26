@@ -12,6 +12,12 @@ EditorBuildSettings:
     path: Assets/Scenes/LoadingScreen.unity
     guid: 71337a69e0349284ab6e95ea9ec4137d
   - enabled: 1
+    path: Assets/Scenes/CreateRoomScreen.unity
+    guid: a7aad319250d1784389fa20daab28171
+  - enabled: 1
+    path: Assets/Scenes/WaitingScreen.unity
+    guid: d2c00e4ae0d7ddf41862feb338ba02a9
+  - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   m_configObjects: {}

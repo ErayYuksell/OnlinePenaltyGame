@@ -11,6 +11,6 @@ public class MenuController : MonoBehaviour
     }
     public void TapToMultilayerButton()
     {
-        SceneManager.LoadScene("Loading");
+        SceneManager.LoadScene("LoadingScreen");
     }
 }
