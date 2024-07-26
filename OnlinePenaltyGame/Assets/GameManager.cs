@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour
     bool isPlayer1Done = false;
     bool isPlayer2Done = false;
 
-
     private void Awake()
     {
         if (Instance == null)
@@ -85,7 +84,6 @@ public class GameManager : MonoBehaviour
 
     public void MovementBetweenPoints(GameObject point1, GameObject point2)
     {
-
         targetTween?.Kill(); // Mevcut hareketi durdur
 
         Sequence sequence = DOTween.Sequence(); // dotween sirasi veya dizisi birden fazla dotween i birlikte kullanmak istiyorsan sirayla calisirlar 
@@ -115,32 +113,10 @@ public class GameManager : MonoBehaviour
         return targetObj.transform.position + Random.insideUnitSphere * 2f;
     }
 
-    // UI da bir target Image olusturup onun pointsler arasi hareket etmesini sagladim 
-    //public void MovementBetweenPoints(GameObject point1, GameObject point2)
-    //{
-    //    Vector2 screenPos1 = Camera.main.WorldToScreenPoint(point1.transform.position); // world pos u olan normal objelerin posunu screen posa cevirip target Image uzerinden hareket ettiriyorum 
-    //    Vector2 screenPos2 = Camera.main.WorldToScreenPoint(point2.transform.position);
-
-    //    targetTween?.Kill(); // Mevcut hareketi durdur
-
-    //    Sequence sequence = DOTween.Sequence(); // dotween sirasi veya dizisi birden fazla dotween i birlikte kullanmak istiyorsan sirayla calisirlar 
-    //    targetTween = sequence.Append(targetImage.DOMove(screenPos1, 1f).SetEase(Ease.Linear))
-    //            .Append(targetImage.DOMove(screenPos2, 1f).SetEase(Ease.Linear))
-    //            .OnComplete(() =>
-    //            {
-    //                ChooseRandomPoint(point1, point2); // Hareket tamamlandýðýnda yeni iki nokta seçilir ve hareket tekrar baþlar
-    //            });
-    //}
-    //public Vector3 StopTargetImageMovement()
-    //{
-    //    targetTween?.Kill(); // targetImage hareketini durdur
-    //    return Camera.main.ScreenToWorldPoint(targetImage.position); // O anki pozisyon bilgisini al
-    //}
-
-    //Slider
     #endregion
 
     #region SliderMovementAndColor
+
     [PunRPC]
     public void PunRPC_MovementSliderArrow()
     {
@@ -189,11 +165,9 @@ public class GameManager : MonoBehaviour
             case "Red":
                 kickForce = 500f;
                 break;
-
             case "Blue":
                 kickForce = 750f;
                 break;
-
             case "Green":
                 kickForce = 1000f;
                 break;
@@ -207,40 +181,59 @@ public class GameManager : MonoBehaviour
         rect.GetWorldCorners(corners); // bu fonksiyon ile rect objesinin 4 kenarininin tam olarak konumunu alabiliyorsun 
         return arrowPos.x >= corners[0].x && arrowPos.x <= corners[2].x;
     }
+
     #endregion
 
+    #region Multiplayer
     public void MultiplayerController()
     {
         if (!PhotonNetwork.IsMasterClient)
         {
             shootControllPanel.SetActive(false);
             goalkeeperAreaPanel.SetActive(true);
+            targetObj.gameObject.SetActive(false);
         }
     }
-    public void SetPlayer1Info(bool value)
+
+    public void SetPlayer1Done()
     {
-        isPlayer1Done = value;
+        photonView.RPC("PunRPC_SetPlayer1Done", RpcTarget.All);
     }
-    public bool GetPlayer1Info()
+
+    public void SetPlayer2Done()
     {
-        return isPlayer1Done;
+        photonView.RPC("PunRPC_SetPlayer2Done", RpcTarget.All);
     }
-    public void SetPlayer2Info(bool value)
-    {
-        isPlayer2Done = value;
-    }
-    public bool GetPlayer2Info()
-    {
-        return isPlayer2Done;
-    }
-    public void UpdatePlayerInfo()
-    {
-        photonView.RPC("PunRPC_UpdatePlayerInfo", RpcTarget.All);
-    }
+
     [PunRPC]
-    void PunRPC_UpdatePlayerInfo()
+    void PunRPC_SetPlayer1Done()
     {
-        isPlayer1Done = GetPlayer1Info();
-        isPlayer2Done = GetPlayer2Info();
+        isPlayer1Done = true;
+        CheckAllPlayersReady();
     }
+
+    [PunRPC]
+    void PunRPC_SetPlayer2Done()
+    {
+        isPlayer2Done = true;
+        CheckAllPlayersReady();
+    }
+
+    void CheckAllPlayersReady()
+    {
+        if (isPlayer1Done && isPlayer2Done)
+        {
+            photonView.RPC("PunRPC_StartShooting", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    void PunRPC_StartShooting()
+    {
+        // Her iki oyuncu da hazýrsa, shoot ve kaleci animasyonlarý ayný anda baþlar.
+        PlayerController.Instance.StartShooting();
+        GoalKeeperController.Instance.StartSaving();
+    }
+
+    #endregion
 }

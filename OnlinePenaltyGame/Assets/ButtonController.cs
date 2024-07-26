@@ -8,30 +8,18 @@ public class ButtonController : MonoBehaviour, IDragHandler, IBeginDragHandler, 
     [SerializeField] GameObject goalkeeperAreaPanel;
     [SerializeField] RectTransform buttonRectTransform; // Butonun RectTransform'u
     [SerializeField] RectTransform sliderRectTransform; // Slider'ýn RectTransform'u
-    [SerializeField] GoalKeeperController goalKeeperController; // GoalKeeperController referansý
     [SerializeField] Transform yellowAreaParentTransform;
 
     private Vector2 initialButtonPosition;
     private Vector2 buttonStartPosition;
 
     bool isDrag = true;
-    bool allDone = false;
+
     private void Start()
     {
         initialButtonPosition = buttonRectTransform.anchoredPosition;
     }
-    private void Update()
-    {
-        if (!allDone)
-        {
-            GameManager.Instance.UpdatePlayerInfo();
-            if (GameManager.Instance.GetPlayer1Info() && GameManager.Instance.GetPlayer2Info())
-            {
-                allDone = true;
-                EndDrag();
-            }
-        }
-    }
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (isDrag)
@@ -48,70 +36,24 @@ public class ButtonController : MonoBehaviour, IDragHandler, IBeginDragHandler, 
             newPosition.x = Mathf.Clamp(newPosition.x, -sliderRectTransform.rect.width / 2, sliderRectTransform.rect.width / 2);
             buttonRectTransform.anchoredPosition = newPosition;
 
-            float rotationFactor = newPosition.x / (sliderRectTransform.rect.width / 2);
-            goalKeeperController.RotateYellowArea(rotationFactor); // GoalKeeperController'daki RotateYellowArea fonksiyonunu çaðýr
+            if (GoalKeeperController.Instance != null)
+            {
+                float rotationFactor = newPosition.x / (sliderRectTransform.rect.width / 2);
+                GoalKeeperController.Instance.RotateYellowArea(rotationFactor); // GoalKeeperController'daki RotateYellowArea fonksiyonunu çaðýr
+            }
+            else
+            {
+                Debug.LogError("GoalKeeperController instance is null.");
+            }
         }
     }
+
 
     public void OnEndDrag(PointerEventData eventData)
     {
         goalkeeperAreaPanel.SetActive(false); // kaleci atlamadan paneli kapa 
         isDrag = false;
         buttonRectTransform.gameObject.GetComponent<Button>().interactable = false;
-        GameManager.Instance.SetPlayer2Info(true);
-
-        if (allDone)
-        {
-            EndDrag();
-        }
-
-
-    }
-    void EndDrag()
-    {
-        if (allDone)
-        {
-            float yellowAreaRotationZ = yellowAreaParentTransform.localEulerAngles.z;
-            if (yellowAreaRotationZ > 180) yellowAreaRotationZ -= 360;
-            Debug.Log(yellowAreaRotationZ);
-
-            // Sarý alanýn dönüþ açýsýna göre animasyonlarý belirle
-            if (IsInRange(yellowAreaRotationZ, -20, 20))
-            {
-                goalKeeperController.PlayCatch();
-            }
-            else if (IsInRange(yellowAreaRotationZ, -40, -20) || IsInRange(yellowAreaRotationZ, 20, 40))
-            {
-                if (IsInRange(yellowAreaRotationZ, -40, -20))
-                {
-                    goalKeeperController.PlayDivingRightSave();
-                }
-                else
-                {
-                    goalKeeperController.PlayDivingSave();
-                }
-            }
-            else if (IsInRange(yellowAreaRotationZ, -61, -40) || IsInRange(yellowAreaRotationZ, 40, 61))
-            {
-                if (IsInRange(yellowAreaRotationZ, -61, -40))
-                {
-                    goalKeeperController.PlayBodyRightBlock();
-                }
-                else
-                {
-                    goalKeeperController.PlayBodyBlock();
-                }
-            }
-            else
-            {
-                goalKeeperController.PlayCatch(); // Varsayýlan animasyon
-            }
-        }
-
-        // Belirtilen aralýkta olup olmadýðýný kontrol eden yardýmcý metot
-        bool IsInRange(float value, float min, float max)
-        {
-            return value >= min && value <= max;
-        }
+        GameManager.Instance.SetPlayer2Done();
     }
 }

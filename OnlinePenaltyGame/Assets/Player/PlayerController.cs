@@ -4,6 +4,8 @@ using Photon.Pun;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance;
+
     [SerializeField] BallController ballController;
     [SerializeField] GoalKeeperController goalKeeperController;
 
@@ -20,23 +22,32 @@ public class PlayerController : MonoBehaviour
 
     GameManager gameManager;
     PhotonView photonView;
-    [SerializeField] GameObject shootControll;
-    bool allDone = false;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
         gameManager = GameManager.Instance;
         photonView = GetComponent<PhotonView>();
 
-        // Null kontrolü
-        if (gameManager == null)
+        if (!photonView.IsMine)
         {
-            Debug.LogError("GameManager instance not found!");
-        }
-
-        if (photonView == null)
-        {
-            Debug.LogError("PhotonView component not found!");
+            // Eðer bu obje yerel oyuncuya ait deðilse, ShootControl panelini kapat.
+            GameObject shootControlPanel = GameObject.Find("ShootControl");
+            if (shootControlPanel != null)
+            {
+                shootControlPanel.SetActive(false);
+            }
         }
     }
 
@@ -47,36 +58,29 @@ public class PlayerController : MonoBehaviour
             transform.position = finalPosition;
             transform.rotation = finalRotation;
         }
-        if (!allDone)
-        {
-            gameManager.UpdatePlayerInfo();
-            if (gameManager.GetPlayer1Info() && gameManager.GetPlayer2Info())
-            {
-                allDone = true;
-                Shoot();
-            }
-        }
     }
 
-    public void Shoot()
+    public void OnShootButtonPressed()
     {
-        gameManager.SetPlayer1Info(true);
-        if (allDone)
-        {
-            photonView.RPC("PunRPC_Shoot", RpcTarget.All);
-        }
+        gameManager.SetPlayer1Done();
+
+        // Renk bilgisi al ve iþleme devam et
+        string arrowColor = gameManager.GetSliderArrowColor();
+        Debug.Log("Slider Arrow Color: " + arrowColor);
+        gameManager.StopSliderArrowMovement(out Vector3 arrowPos);
     }
+
+    public void StartShooting()
+    {
+        photonView.RPC("PunRPC_Shoot", RpcTarget.All);
+    }
+
     [PunRPC]
     public void PunRPC_Shoot() // button icinde
     {
         // Animasyonu oynat
         animator.Play(penaltyKickAnim.name);
         animationFinished = false;
-
-        // Renk bilgisi al ve iþleme devam et
-        string arrowColor = gameManager.GetSliderArrowColor();
-        Debug.Log("Slider Arrow Color: " + arrowColor);
-        gameManager.StopSliderArrowMovement(out Vector3 arrowPos);
 
         // targetImage hareketini durdur ve pozisyon bilgisini al
         targetPosition = gameManager.StopTargetMovement();
@@ -102,7 +106,6 @@ public class PlayerController : MonoBehaviour
     // Animasyon Event tarafýndan çaðrýlacak metod
     public void OnKick()
     {
-        // Topa vurma iþlemi artýk RPC ile senkronize edildiði için bu metod boþ býrakýlabilir.
         // Topa vurma iþlemini tüm oyunculara senkronize et
         photonView.RPC("PunRPC_ShootBall", RpcTarget.All, targetPosition, gameManager.BallMovementForceByColor());
     }

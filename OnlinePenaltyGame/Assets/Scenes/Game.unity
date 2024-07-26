@@ -2592,7 +2592,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 919132147495013448}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: Shoot
+        m_MethodName: OnShootButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
