@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using Photon.Pun;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +27,13 @@ public class GameManager : MonoBehaviour
     public ShootColors shootColors;
 
     float kickForce;
+    [Header("Photon")]
+    PhotonView photonView;
+    [SerializeField] GameObject shootControllPanel;
+    [SerializeField] GameObject goalkeeperAreaPanel;
+    bool isPlayer1Done = false;
+    bool isPlayer2Done = false;
+
 
     private void Awake()
     {
@@ -41,10 +49,20 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        ChooseRandomPoint();
-        MovementSliderArrow();
+        photonView = GetComponent<PhotonView>();
+        photonView.RPC("PunRPC_ChooseRandomPoint", RpcTarget.All);
+        photonView.RPC("PunRPC_MovementSliderArrow", RpcTarget.All);
+        MultiplayerController();
     }
+
     #region TargetMovement
+
+    [PunRPC]
+    public void PunRPC_ChooseRandomPoint()
+    {
+        ChooseRandomPoint();
+    }
+
     public void ChooseRandomPoint(GameObject oldPoint1 = null, GameObject oldPoint2 = null)
     {
         if (shootPoints.Count < 2)
@@ -78,6 +96,7 @@ public class GameManager : MonoBehaviour
                     ChooseRandomPoint(point1, point2); // Hareket tamamlandýðýnda yeni iki nokta seçilir ve hareket tekrar baþlar
                 });
     }
+
     public Vector3 StopTargetMovement()
     {
         targetTween?.Kill(); // targetImage hareketini durdur
@@ -90,6 +109,7 @@ public class GameManager : MonoBehaviour
     {
         return failShootPoints[Random.Range(0, failShootPoints.Count)].gameObject.transform.position;
     }
+
     public Vector3 BlueColorOptions()
     {
         return targetObj.transform.position + Random.insideUnitSphere * 2f;
@@ -121,6 +141,12 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region SliderMovementAndColor
+    [PunRPC]
+    public void PunRPC_MovementSliderArrow()
+    {
+        MovementSliderArrow();
+    }
+
     public void MovementSliderArrow()
     {
         Vector3 startPos = new Vector3(sliderStart, sliderArrow.localPosition.y, sliderArrow.localPosition.z);
@@ -128,6 +154,7 @@ public class GameManager : MonoBehaviour
         sliderArrow.localPosition = startPos; // baska normal pos olarak almaya calistim alakasiz yerlerde git gel yapti o yuzden local aliyoruz
         sliderArrowTween = sliderArrow.DOLocalMove(finishPos, 1f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
     }
+
     public void StopSliderArrowMovement(out Vector3 arrowPos)
     {
         sliderArrowTween?.Kill();
@@ -170,7 +197,6 @@ public class GameManager : MonoBehaviour
             case "Green":
                 kickForce = 1000f;
                 break;
-
         }
         return kickForce;
     }
@@ -182,4 +208,39 @@ public class GameManager : MonoBehaviour
         return arrowPos.x >= corners[0].x && arrowPos.x <= corners[2].x;
     }
     #endregion
+
+    public void MultiplayerController()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            shootControllPanel.SetActive(false);
+            goalkeeperAreaPanel.SetActive(true);
+        }
+    }
+    public void SetPlayer1Info(bool value)
+    {
+        isPlayer1Done = value;
+    }
+    public bool GetPlayer1Info()
+    {
+        return isPlayer1Done;
+    }
+    public void SetPlayer2Info(bool value)
+    {
+        isPlayer2Done = value;
+    }
+    public bool GetPlayer2Info()
+    {
+        return isPlayer2Done;
+    }
+    public void UpdatePlayerInfo()
+    {
+        photonView.RPC("PunRPC_UpdatePlayerInfo", RpcTarget.All);
+    }
+    [PunRPC]
+    void PunRPC_UpdatePlayerInfo()
+    {
+        isPlayer1Done = GetPlayer1Info();
+        isPlayer2Done = GetPlayer2Info();
+    }
 }

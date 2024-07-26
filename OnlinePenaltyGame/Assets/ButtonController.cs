@@ -15,12 +15,23 @@ public class ButtonController : MonoBehaviour, IDragHandler, IBeginDragHandler, 
     private Vector2 buttonStartPosition;
 
     bool isDrag = true;
-
+    bool allDone = false;
     private void Start()
     {
         initialButtonPosition = buttonRectTransform.anchoredPosition;
     }
-
+    private void Update()
+    {
+        if (!allDone)
+        {
+            GameManager.Instance.UpdatePlayerInfo();
+            if (GameManager.Instance.GetPlayer1Info() && GameManager.Instance.GetPlayer2Info())
+            {
+                allDone = true;
+                EndDrag();
+            }
+        }
+    }
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (isDrag)
@@ -47,48 +58,60 @@ public class ButtonController : MonoBehaviour, IDragHandler, IBeginDragHandler, 
         goalkeeperAreaPanel.SetActive(false); // kaleci atlamadan paneli kapa 
         isDrag = false;
         buttonRectTransform.gameObject.GetComponent<Button>().interactable = false;
+        GameManager.Instance.SetPlayer2Info(true);
 
-        float yellowAreaRotationZ = yellowAreaParentTransform.localEulerAngles.z;
-        if (yellowAreaRotationZ > 180) yellowAreaRotationZ -= 360;
-        Debug.Log(yellowAreaRotationZ);
+        if (allDone)
+        {
+            EndDrag();
+        }
 
-        // Sarý alanýn dönüþ açýsýna göre animasyonlarý belirle
-        if (IsInRange(yellowAreaRotationZ, -20, 20))
-        {
-            goalKeeperController.PlayCatch();
-        }
-        else if (IsInRange(yellowAreaRotationZ, -40, -20) || IsInRange(yellowAreaRotationZ, 20, 40))
-        {
-            if (IsInRange(yellowAreaRotationZ, -40, -20))
-            {
-                goalKeeperController.PlayDivingRightSave();
-            }
-            else
-            {
-                goalKeeperController.PlayDivingSave();
-            }
-        }
-        else if (IsInRange(yellowAreaRotationZ, -61, -40) || IsInRange(yellowAreaRotationZ, 40, 61))
-        {
-            if (IsInRange(yellowAreaRotationZ, -61, -40))
-            {
-                goalKeeperController.PlayBodyRightBlock();
-            }
-            else
-            {
-                goalKeeperController.PlayBodyBlock();
-            }
-        }
-        else
-        {
-            goalKeeperController.PlayCatch(); // Varsayýlan animasyon
-        }
+
     }
-
-    // Belirtilen aralýkta olup olmadýðýný kontrol eden yardýmcý metot
-    private bool IsInRange(float value, float min, float max)
+    void EndDrag()
     {
-        return value >= min && value <= max;
-    }
+        if (allDone)
+        {
+            float yellowAreaRotationZ = yellowAreaParentTransform.localEulerAngles.z;
+            if (yellowAreaRotationZ > 180) yellowAreaRotationZ -= 360;
+            Debug.Log(yellowAreaRotationZ);
 
+            // Sarý alanýn dönüþ açýsýna göre animasyonlarý belirle
+            if (IsInRange(yellowAreaRotationZ, -20, 20))
+            {
+                goalKeeperController.PlayCatch();
+            }
+            else if (IsInRange(yellowAreaRotationZ, -40, -20) || IsInRange(yellowAreaRotationZ, 20, 40))
+            {
+                if (IsInRange(yellowAreaRotationZ, -40, -20))
+                {
+                    goalKeeperController.PlayDivingRightSave();
+                }
+                else
+                {
+                    goalKeeperController.PlayDivingSave();
+                }
+            }
+            else if (IsInRange(yellowAreaRotationZ, -61, -40) || IsInRange(yellowAreaRotationZ, 40, 61))
+            {
+                if (IsInRange(yellowAreaRotationZ, -61, -40))
+                {
+                    goalKeeperController.PlayBodyRightBlock();
+                }
+                else
+                {
+                    goalKeeperController.PlayBodyBlock();
+                }
+            }
+            else
+            {
+                goalKeeperController.PlayCatch(); // Varsayýlan animasyon
+            }
+        }
+
+        // Belirtilen aralýkta olup olmadýðýný kontrol eden yardýmcý metot
+        bool IsInRange(float value, float min, float max)
+        {
+            return value >= min && value <= max;
+        }
+    }
 }
