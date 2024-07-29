@@ -68,6 +68,9 @@ public class PlayerController : MonoBehaviour
         string arrowColor = gameManager.GetSliderArrowColor();
         Debug.Log("Slider Arrow Color: " + arrowColor);
         gameManager.StopSliderArrowMovement(out Vector3 arrowPos);
+
+        // targetImage hareketini durdur ve pozisyon bilgisini al
+        targetPosition = gameManager.StopTargetMovement();
     }
 
     public void StartShooting()
@@ -82,8 +85,7 @@ public class PlayerController : MonoBehaviour
         animator.Play(penaltyKickAnim.name);
         animationFinished = false;
 
-        // targetImage hareketini durdur ve pozisyon bilgisini al
-        targetPosition = gameManager.StopTargetMovement();
+      
         targetPosition = gameManager.GetSliderArrowColor() == "Red" ? gameManager.FailShootMovement() : targetPosition;
         targetPosition = gameManager.GetSliderArrowColor() == "Blue" ? gameManager.BlueColorOptions() : targetPosition;
     }

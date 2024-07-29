@@ -190,6 +190,8 @@ GameObject:
   - component: {fileID: -1382380688199947211}
   - component: {fileID: -3688075569383006866}
   - component: {fileID: -5321707570962637756}
+  - component: {fileID: 7649667263584781987}
+  - component: {fileID: 8509456552226025776}
   - component: {fileID: 8073755064794980091}
   - component: {fileID: 6069671390197568347}
   - component: {fileID: 4923887600230000821}
@@ -286,6 +288,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: -3688075569383006866}
   bodyBlockAnim: {fileID: 7400000, guid: 031b227d77501d143b3e0abc03ac6ec1, type: 2}
+  bodyBlockRightAnim: {fileID: 7400000, guid: c0d43925d07252d4f8800381fa7b4590, type: 2}
+  divingSave: {fileID: 7400000, guid: 56c689c7bdcfbd74c99e0eb72ec47371, type: 2}
+  divingRightSave: {fileID: 7400000, guid: 9f2fa63bb75af3841853c024ad0e8b2a, type: 2}
+  catchAnim: {fileID: 7400000, guid: 703f9f77fe60f9d49a06f8f8e241b81b, type: 2}
+  yellowAreaParentTransform: {fileID: 0}
+--- !u!114 &7649667263584781987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461630278964757392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents:
+  - {fileID: 8509456552226025776}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &8509456552226025776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461630278964757392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SynchronizePosition: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
+  m_UseLocal: 1
 --- !u!136 &8073755064794980091
 CapsuleCollider:
   m_ObjectHideFlags: 0

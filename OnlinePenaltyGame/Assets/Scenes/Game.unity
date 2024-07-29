@@ -2120,7 +2120,6 @@ MonoBehaviour:
   goalkeeperAreaPanel: {fileID: 1658506704}
   buttonRectTransform: {fileID: 1346351524}
   sliderRectTransform: {fileID: 1689312038}
-  goalKeeperController: {fileID: 919132148039911199}
   yellowAreaParentTransform: {fileID: 608904392}
 --- !u!1 &1398257855 stripped
 GameObject:
@@ -3471,34 +3470,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -5321707570962637756, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
-      propertyPath: catchAnim
-      value: 
-      objectReference: {fileID: 7400000, guid: 703f9f77fe60f9d49a06f8f8e241b81b, type: 2}
-    - target: {fileID: -5321707570962637756, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
-      propertyPath: divingSave
-      value: 
-      objectReference: {fileID: 7400000, guid: 56c689c7bdcfbd74c99e0eb72ec47371, type: 2}
-    - target: {fileID: -5321707570962637756, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
-      propertyPath: divingRightSave
-      value: 
-      objectReference: {fileID: 7400000, guid: 9f2fa63bb75af3841853c024ad0e8b2a, type: 2}
-    - target: {fileID: -5321707570962637756, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
-      propertyPath: bodyBlockRightAnim
-      value: 
-      objectReference: {fileID: 7400000, guid: c0d43925d07252d4f8800381fa7b4590, type: 2}
-    - target: {fileID: -5321707570962637756, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
-      propertyPath: buttonRectTransform
-      value: 
-      objectReference: {fileID: 1346351524}
-    - target: {fileID: -5321707570962637756, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
-      propertyPath: sliderRectTransform
-      value: 
-      objectReference: {fileID: 1689312038}
-    - target: {fileID: -5321707570962637756, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
-      propertyPath: yellowAreaTransform
-      value: 
-      objectReference: {fileID: 1215917440}
-    - target: {fileID: -5321707570962637756, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
       propertyPath: yellowAreaParentTransform
       value: 
       objectReference: {fileID: 608904392}
@@ -3545,6 +3516,10 @@ PrefabInstance:
     - target: {fileID: 2495492190398661512, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7649667263584781987, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
+      propertyPath: sceneViewId
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

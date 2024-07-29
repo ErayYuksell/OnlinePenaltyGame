@@ -49,18 +49,12 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         photonView = GetComponent<PhotonView>();
-        photonView.RPC("PunRPC_ChooseRandomPoint", RpcTarget.All);
-        photonView.RPC("PunRPC_MovementSliderArrow", RpcTarget.All);
+        ChooseRandomPoint();
+        MovementSliderArrow();
         MultiplayerController();
     }
 
     #region TargetMovement
-
-    [PunRPC]
-    public void PunRPC_ChooseRandomPoint()
-    {
-        ChooseRandomPoint();
-    }
 
     public void ChooseRandomPoint(GameObject oldPoint1 = null, GameObject oldPoint2 = null)
     {
@@ -116,12 +110,6 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region SliderMovementAndColor
-
-    [PunRPC]
-    public void PunRPC_MovementSliderArrow()
-    {
-        MovementSliderArrow();
-    }
 
     public void MovementSliderArrow()
     {
