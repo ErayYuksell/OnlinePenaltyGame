@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     GameManager gameManager;
     PhotonView photonView;
 
+
     private void Awake()
     {
         if (Instance == null)
@@ -85,7 +86,7 @@ public class PlayerController : MonoBehaviour
         animator.Play(penaltyKickAnim.name);
         animationFinished = false;
 
-      
+
         targetPosition = gameManager.GetSliderArrowColor() == "Red" ? gameManager.FailShootMovement() : targetPosition;
         targetPosition = gameManager.GetSliderArrowColor() == "Blue" ? gameManager.BlueColorOptions() : targetPosition;
     }
@@ -120,4 +121,5 @@ public class PlayerController : MonoBehaviour
         animationFinished = true;
         animator.SetBool("isIdle", true);
     }
+
 }

@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
         ChooseRandomPoint();
         MovementSliderArrow();
         MultiplayerController();
-        if (PhotonNetwork.IsMasterClient) StartCountdown(); // Sadece MasterClient countdown baþlatýr
+        //if (PhotonNetwork.IsMasterClient) StartCountdown(); // Sadece MasterClient countdown baþlatýr
     }
 
     #region TargetMovement
@@ -202,20 +202,22 @@ public class GameManager : MonoBehaviour
         shootControllPanel.SetActive(isPlayer1);
         targetObj.gameObject.SetActive(isPlayer1);
         goalkeeperAreaPanel.SetActive(!isPlayer1);
+        //StartCountdown();
     }
 
     public void SwitchTurn()
     {
         isPlayer1Turn = !isPlayer1Turn;
-        photonView.RPC("PunRPC_SetTurn", RpcTarget.All, isPlayer1Turn);
+        SetTurn(isPlayer1Turn);
+        //photonView.RPC("PunRPC_SetTurn", RpcTarget.All, isPlayer1Turn);
     }
 
-    [PunRPC]
-    void PunRPC_SetTurn(bool isPlayer1)
-    {
-        SetTurn(isPlayer1);
-        StartCountdown(); // Yeni turn baþladýðýnda countdown tekrar baþlar
-    }
+    //[PunRPC]
+    //void PunRPC_SetTurn(bool isPlayer1)
+    //{
+    //    SetTurn(isPlayer1);
+    //    StartCountdown(); // Yeni turn baþladýðýnda countdown tekrar baþlar
+    //}
 
     public void SetPlayer1Done()
     {
@@ -275,7 +277,7 @@ public class GameManager : MonoBehaviour
         }
         UpdateScoreText();
         ballInside = true;
-        StopCountdown(); // Skor güncellendiðinde sayaç durdurulur
+        //StopCountdown(); // Skor güncellendiðinde sayaç durdurulur
         SwitchTurn(); // Tur geçiþi yapýlýr
     }
 
@@ -284,7 +286,7 @@ public class GameManager : MonoBehaviour
         if (!ballInside)
         {
             isPlayer1Turn = !isPlayer1Turn;
-            StopCountdown(); // Sayaç durduruldu
+            //StopCountdown(); // Sayaç durduruldu
             SwitchTurn(); // Yeni sayaç baþlatýldý ve tur deðiþtirildi
         }
     }
@@ -299,45 +301,45 @@ public class GameManager : MonoBehaviour
 
     #region CountdownTimer
 
-    [PunRPC]
-    IEnumerator PunRPC_CountdownTimer()
-    {
-        isCountdownRunning = true; // Sayaç baþlýyor
-        countdownTimer = 10; // Sayaç süresini baþa al
-        while (countdownTimer > 0)
-        {
-            countdownText.text = countdownTimer.ToString(); // Geri sayýmý ekranda göster
-            yield return new WaitForSeconds(1);
-            countdownTimer--;
-        }
-        isCountdownRunning = false; // Sayaç bitti
-        countdownText.text = ""; // Sayaç ekranýný temizle
-        if (!ballInside)
-        {
-            SwitchTurn(); // Sayaç bitiminde turn deðiþimi yapýlýr
-        }
-    }
+    //[PunRPC]
+    //IEnumerator PunRPC_CountdownTimer()
+    //{
+    //    isCountdownRunning = true; // Sayaç baþlýyor
+    //    countdownTimer = 10; // Sayaç süresini baþa al
+    //    while (countdownTimer > 0)
+    //    {
+    //        countdownText.text = countdownTimer.ToString(); // Geri sayýmý ekranda göster
+    //        yield return new WaitForSeconds(1);
+    //        countdownTimer--;
+    //    }
+    //    isCountdownRunning = false; // Sayaç bitti
+    //    countdownText.text = ""; // Sayaç ekranýný temizle
+    //    if (!ballInside)
+    //    {
+    //        SwitchTurn(); // Sayaç bitiminde turn deðiþimi yapýlýr
+    //    }
+    //}
 
-    public void StartCountdown()
-    {
-        photonView.RPC("PunRPC_CountdownTimer", RpcTarget.All);
-    }
+    //public void StartCountdown()
+    //{
+    //    photonView.RPC("PunRPC_CountdownTimer", RpcTarget.All);
+    //}
 
-    public void StopCountdown()
-    {
-        if (isCountdownRunning)
-        {
-            StopCoroutine("PunRPC_CountdownTimer");
-            photonView.RPC("PunRPC_StopCountdown", RpcTarget.All);
-        }
-    }
+    //public void StopCountdown()
+    //{
+    //    if (isCountdownRunning)
+    //    {
+    //        StopCoroutine("PunRPC_CountdownTimer");
+    //        photonView.RPC("PunRPC_StopCountdown", RpcTarget.All);
+    //    }
+    //}
 
-    [PunRPC]
-    void PunRPC_StopCountdown()
-    {
-        isCountdownRunning = false;
-        countdownText.text = "";
-    }
+    //[PunRPC]
+    //void PunRPC_StopCountdown()
+    //{
+    //    isCountdownRunning = false;
+    //    countdownText.text = "";
+    //}
 
     #endregion
 
