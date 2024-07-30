@@ -15,4 +15,12 @@ public class BallController : MonoBehaviour
         rb.AddForce(direction * kickForce);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("SoccerGoal"))
+        {
+            GameManager.Instance.UpdateScore();
+        }
+    }
+
 }

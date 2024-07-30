@@ -1497,6 +1497,9 @@ MonoBehaviour:
   shootColors: 0
   shootControllPanel: {fileID: 2067984148}
   goalkeeperAreaPanel: {fileID: 1658506704}
+  player1ScoreText: {fileID: 1484863138}
+  player2ScoreText: {fileID: 644476212}
+  countdownText: {fileID: 308483374}
 --- !u!4 &906881038
 Transform:
   m_ObjectHideFlags: 0
@@ -3666,10 +3669,6 @@ PrefabInstance:
     - target: {fileID: 1275178667944218061, guid: 7470e14080300df41838456987750abd, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4356010934522129430, guid: 7470e14080300df41838456987750abd, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8628549009521830477, guid: 7470e14080300df41838456987750abd, type: 3}
       propertyPath: m_Name

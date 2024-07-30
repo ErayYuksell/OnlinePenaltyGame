@@ -50,6 +50,7 @@ MonoBehaviour:
   - PunRPC_StartShooting
   - PunRPC_RotateYellowArea
   - PunRPC_UpdateYellowAreaRotation
+  - PunRPC_StopCountdown
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,12 +30,21 @@ public class GameManager : MonoBehaviour
 
     float kickForce;
     [Header("Photon")]
-    PhotonView photonView;
     [SerializeField] GameObject shootControllPanel;
     [SerializeField] GameObject goalkeeperAreaPanel;
+    PhotonView photonView;
     bool isPlayer1Done = false;
     bool isPlayer2Done = false;
-
+    bool isPlayer1Turn = true;
+    bool ballInside = false;
+    [SerializeField] TextMeshProUGUI player1ScoreText;
+    [SerializeField] TextMeshProUGUI player2ScoreText;
+    int player1Score = 0;
+    int player2Score = 0;
+    [SerializeField] TextMeshProUGUI countdownText; // Yeni deðiþken eklendi
+    int countdownTimer = 10;
+    bool isCountdownRunning = false; // Sayaç durumunu takip eden deðiþken
+    bool isGameDone = true;
     private void Awake()
     {
         if (Instance == null)
@@ -52,6 +63,7 @@ public class GameManager : MonoBehaviour
         ChooseRandomPoint();
         MovementSliderArrow();
         MultiplayerController();
+        StartCountdown();
     }
 
     #region TargetMovement
@@ -175,11 +187,32 @@ public class GameManager : MonoBehaviour
     #region Multiplayer
     public void MultiplayerController()
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (!PhotonNetwork.IsMasterClient && isGameDone)
         {
+            isGameDone = false;
             shootControllPanel.SetActive(false);
-            goalkeeperAreaPanel.SetActive(true);
             targetObj.gameObject.SetActive(false);
+            goalkeeperAreaPanel.SetActive(true);
+        }
+    }
+
+    IEnumerator UpdatePlayerTurn()
+    {
+        if (isPlayer1Turn)
+        {
+            yield return new WaitForSeconds(1.5f);
+            PhotonNetwork.LoadLevel("Game");
+            shootControllPanel.SetActive(true);
+            targetObj.gameObject.SetActive(true);
+            goalkeeperAreaPanel.SetActive(false);
+        }
+        else if (!isPlayer1Turn)
+        {
+            yield return new WaitForSeconds(1.5f);
+            PhotonNetwork.LoadLevel("Game");
+            shootControllPanel.SetActive(false);
+            targetObj.gameObject.SetActive(false);
+            goalkeeperAreaPanel.SetActive(true);
         }
     }
 
@@ -222,6 +255,87 @@ public class GameManager : MonoBehaviour
         PlayerController.Instance.StartShooting();
         GoalKeeperController.Instance.StartSaving();
     }
+
+    #region ScoreSection
+
+    public void UpdateScore()
+    {
+        if (isPlayer1Turn)
+        {
+            player1Score++;
+        }
+        else
+        {
+            player2Score++;
+        }
+        UpdateScoreText();
+        isPlayer1Turn = !isPlayer1Turn;
+        ballInside = true;
+        StartCountdown(); // Yeni sayaç baþlatýldý
+        StartCoroutine(UpdatePlayerTurn());
+    }
+
+    public void BallNotInside()
+    {
+        if (!ballInside)
+        {
+            isPlayer1Turn = !isPlayer1Turn;
+            StopCountdown(); // Sayaç durduruldu
+            StartCountdown(); // Yeni sayaç baþlatýldý
+            StartCoroutine(UpdatePlayerTurn());
+        }
+    }
+
+    void UpdateScoreText()
+    {
+        player1ScoreText.text = player1Score.ToString();
+        player2ScoreText.text = player2Score.ToString();
+    }
+
+
+
+    #endregion
+
+    #region CountdownTimer
+
+    [PunRPC]
+    IEnumerator PunRPC_CountdownTimer()
+    {
+        isCountdownRunning = true; // Sayaç baþlýyor
+        countdownTimer = 10; // Sayaç süresini baþa al
+        while (countdownTimer > 0)
+        {
+            countdownText.text = countdownTimer.ToString(); // Geri sayýmý ekranda göster
+            yield return new WaitForSeconds(1);
+            countdownTimer--;
+        }
+        isCountdownRunning = false; // Sayaç bitti
+        countdownText.text = ""; // Sayaç ekranýný temizle
+        // Ek iþlemler burada yapýlabilir
+    }
+
+    public void StartCountdown()
+    {
+        photonView.RPC("PunRPC_CountdownTimer", RpcTarget.All);
+    }
+
+    public void StopCountdown()
+    {
+        if (isCountdownRunning)
+        {
+            StopCoroutine("PunRPC_CountdownTimer");
+            photonView.RPC("PunRPC_StopCountdown", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    void PunRPC_StopCountdown()
+    {
+        isCountdownRunning = false;
+        countdownText.text = "";
+    }
+
+    #endregion
 
     #endregion
 }
