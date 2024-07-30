@@ -51,6 +51,8 @@ MonoBehaviour:
   - PunRPC_RotateYellowArea
   - PunRPC_UpdateYellowAreaRotation
   - PunRPC_StopCountdown
+  - PunRPC_StartNextTurn
+  - PunRPC_SetTurn
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

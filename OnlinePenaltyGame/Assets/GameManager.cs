@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using DG.Tweening;
 using Photon.Pun;
-using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -33,8 +32,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject shootControllPanel;
     [SerializeField] GameObject goalkeeperAreaPanel;
     PhotonView photonView;
-    bool isPlayer1Done = false;
-    bool isPlayer2Done = false;
     bool isPlayer1Turn = true;
     bool ballInside = false;
     [SerializeField] TextMeshProUGUI player1ScoreText;
@@ -44,7 +41,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI countdownText; // Yeni deðiþken eklendi
     int countdownTimer = 10;
     bool isCountdownRunning = false; // Sayaç durumunu takip eden deðiþken
-    bool isGameDone = true;
+    bool isPlayer1Done = false;
+    bool isPlayer2Done = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -63,7 +62,7 @@ public class GameManager : MonoBehaviour
         ChooseRandomPoint();
         MovementSliderArrow();
         MultiplayerController();
-        StartCountdown();
+        if (PhotonNetwork.IsMasterClient) StartCountdown(); // Sadece MasterClient countdown baþlatýr
     }
 
     #region TargetMovement
@@ -187,42 +186,46 @@ public class GameManager : MonoBehaviour
     #region Multiplayer
     public void MultiplayerController()
     {
-        if (!PhotonNetwork.IsMasterClient && isGameDone)
+        if (PhotonNetwork.IsMasterClient)
         {
-            isGameDone = false;
-            shootControllPanel.SetActive(false);
-            targetObj.gameObject.SetActive(false);
-            goalkeeperAreaPanel.SetActive(true);
+            SetTurn(true); // Ýlk olarak player 1 baþlatýr
+        }
+        else
+        {
+            SetTurn(false);
         }
     }
 
-    IEnumerator UpdatePlayerTurn()
+    public void SetTurn(bool isPlayer1)
     {
-        if (isPlayer1Turn)
-        {
-            yield return new WaitForSeconds(1.5f);
-            PhotonNetwork.LoadLevel("Game");
-            shootControllPanel.SetActive(true);
-            targetObj.gameObject.SetActive(true);
-            goalkeeperAreaPanel.SetActive(false);
-        }
-        else if (!isPlayer1Turn)
-        {
-            yield return new WaitForSeconds(1.5f);
-            PhotonNetwork.LoadLevel("Game");
-            shootControllPanel.SetActive(false);
-            targetObj.gameObject.SetActive(false);
-            goalkeeperAreaPanel.SetActive(true);
-        }
+        isPlayer1Turn = isPlayer1;
+        shootControllPanel.SetActive(isPlayer1);
+        targetObj.gameObject.SetActive(isPlayer1);
+        goalkeeperAreaPanel.SetActive(!isPlayer1);
+    }
+
+    public void SwitchTurn()
+    {
+        isPlayer1Turn = !isPlayer1Turn;
+        photonView.RPC("PunRPC_SetTurn", RpcTarget.All, isPlayer1Turn);
+    }
+
+    [PunRPC]
+    void PunRPC_SetTurn(bool isPlayer1)
+    {
+        SetTurn(isPlayer1);
+        StartCountdown(); // Yeni turn baþladýðýnda countdown tekrar baþlar
     }
 
     public void SetPlayer1Done()
     {
+        isPlayer1Done = true;
         photonView.RPC("PunRPC_SetPlayer1Done", RpcTarget.All);
     }
 
     public void SetPlayer2Done()
     {
+        isPlayer2Done = true;
         photonView.RPC("PunRPC_SetPlayer2Done", RpcTarget.All);
     }
 
@@ -254,6 +257,8 @@ public class GameManager : MonoBehaviour
         // Her iki oyuncu da hazýrsa, shoot ve kaleci animasyonlarý ayný anda baþlar.
         PlayerController.Instance.StartShooting();
         GoalKeeperController.Instance.StartSaving();
+        isPlayer1Done = false;
+        isPlayer2Done = false;
     }
 
     #region ScoreSection
@@ -269,10 +274,9 @@ public class GameManager : MonoBehaviour
             player2Score++;
         }
         UpdateScoreText();
-        isPlayer1Turn = !isPlayer1Turn;
         ballInside = true;
-        StartCountdown(); // Yeni sayaç baþlatýldý
-        StartCoroutine(UpdatePlayerTurn());
+        StopCountdown(); // Skor güncellendiðinde sayaç durdurulur
+        SwitchTurn(); // Tur geçiþi yapýlýr
     }
 
     public void BallNotInside()
@@ -281,8 +285,7 @@ public class GameManager : MonoBehaviour
         {
             isPlayer1Turn = !isPlayer1Turn;
             StopCountdown(); // Sayaç durduruldu
-            StartCountdown(); // Yeni sayaç baþlatýldý
-            StartCoroutine(UpdatePlayerTurn());
+            SwitchTurn(); // Yeni sayaç baþlatýldý ve tur deðiþtirildi
         }
     }
 
@@ -291,8 +294,6 @@ public class GameManager : MonoBehaviour
         player1ScoreText.text = player1Score.ToString();
         player2ScoreText.text = player2Score.ToString();
     }
-
-
 
     #endregion
 
@@ -311,7 +312,10 @@ public class GameManager : MonoBehaviour
         }
         isCountdownRunning = false; // Sayaç bitti
         countdownText.text = ""; // Sayaç ekranýný temizle
-        // Ek iþlemler burada yapýlabilir
+        if (!ballInside)
+        {
+            SwitchTurn(); // Sayaç bitiminde turn deðiþimi yapýlýr
+        }
     }
 
     public void StartCountdown()
