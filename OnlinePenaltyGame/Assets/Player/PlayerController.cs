@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
     public void PunRPC_ShootBall(Vector3 targetPos, float kickForce)
     {
         Vector3 direction = (targetPos - ball.position).normalized;
-        ballController.KickBall(direction, kickForce);
+        ballController.KickBall(direction, 2, kickForce); // 2 high i temsil ediyor daha iyi bir degerle daha iyi goruntu cikarabilirsin 
 
         // Animasyon tamamlandýðýnda yapýlacak iþlemler
         finalPosition = transform.position;

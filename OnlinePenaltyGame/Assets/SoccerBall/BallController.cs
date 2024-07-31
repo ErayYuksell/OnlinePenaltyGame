@@ -1,12 +1,11 @@
-
+using System.Collections;
 using UnityEngine;
 
 public class BallController : MonoBehaviour
 {
     public static BallController Instance;
     private Rigidbody rb;
-    bool isTouch = false;
-    Vector3 initialPosition;
+    private Vector3 initialPosition;
 
     private void Awake()
     {
@@ -14,22 +13,41 @@ public class BallController : MonoBehaviour
         {
             Instance = this;
             initialPosition = transform.position;
-            Debug.Log("BallIniitalPos" + initialPosition);
         }
         else
         {
             Destroy(gameObject);
         }
     }
-    void Start()
+
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
-
     }
 
-    public void KickBall(Vector3 direction, float kickForce)
+    public void KickBall(Vector3 targetPosition, float height, float duration)
     {
-        rb.AddForce(direction * kickForce);
+        StartCoroutine(SmoothKickBall(targetPosition, height, duration));
+    }
+
+    private IEnumerator SmoothKickBall(Vector3 targetPosition, float height, float duration)
+    {
+        rb.isKinematic = true; // Kinematic durumu açýlýyor
+        Vector3 startPosition = transform.position;
+        float elapsedTime = 0;
+
+        while (elapsedTime < duration)
+        {
+            // Parabolik hareket için Lerp kullanýmý
+            float t = elapsedTime / duration;
+            float yOffset = height * Mathf.Sin(Mathf.PI * t);
+            transform.position = Vector3.Lerp(startPosition, targetPosition, t) + new Vector3(0, yOffset, 0);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition;
+        rb.isKinematic = false; // Kinematic durumu kapatýlýyor
     }
 
     private void OnTriggerEnter(Collider other)
@@ -46,10 +64,12 @@ public class BallController : MonoBehaviour
         {
             rb = GetComponent<Rigidbody>(); // Emin olun ki rb null deðil
         }
-        transform.position = initialPosition;
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
-    }
 
+        rb.isKinematic = false; // Kinematic durumu kapatýlýyor
+        rb.velocity = Vector3.zero; // Topun hareketini durdurun
+        rb.angularVelocity = Vector3.zero; // Topun dönme hareketini durdurun
+        transform.position = initialPosition; // Topun baþlangýç pozisyonunu burada belirtin
+        rb.isKinematic = true; // Kinematic durumu tekrar açýlýyor
+    }
 
 }

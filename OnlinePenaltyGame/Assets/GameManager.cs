@@ -160,18 +160,18 @@ public class GameManager : MonoBehaviour
     {
         switch (GetSliderArrowColor())
         {
-            default: return 500f;
+            default: return 0.5f;
             case "Red":
-                kickForce = 500f;
+                kickForce = 0.5f;
                 break;
             case "Blue":
-                kickForce = 750f;
+                kickForce = 0.7f;
                 break;
             case "Green":
-                kickForce = 1000f;
+                kickForce = 0.5f;
                 break;
         }
-        return kickForce;
+        return kickForce = 0.5f;
     }
 
     private bool IsWithinBounds(Vector3 arrowPos, RectTransform rect)
