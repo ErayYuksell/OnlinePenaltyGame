@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Animator animator;
     [SerializeField] AnimationClip penaltyKickAnim;
+    [SerializeField] AnimationClip idle;
     [SerializeField] Transform ball;
     [SerializeField] Transform goal;
 
@@ -23,12 +24,16 @@ public class PlayerController : MonoBehaviour
     GameManager gameManager;
     PhotonView photonView;
 
-
+    Vector3 initialPosition;
+    Quaternion initialRotation;
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            initialPosition = transform.position;
+            Debug.Log("PlayerInitialPos" + initialPosition);
+            initialRotation = transform.rotation;
         }
         else
         {
@@ -120,6 +125,13 @@ public class PlayerController : MonoBehaviour
         finalRotation = transform.rotation;
         animationFinished = true;
         animator.SetBool("isIdle", true);
+    }
+
+    public void ResetPosition()
+    {
+        transform.position = initialPosition; // Oyuncunun baþlangýç pozisyonunu burada belirtin
+        transform.rotation = initialRotation; // Oyuncunun baþlangýç rotasyonunu burada belirtin
+        animator.Play(idle.name); // Oyuncunun animasyonunu baþlangýç durumuna getirin
     }
 
 }

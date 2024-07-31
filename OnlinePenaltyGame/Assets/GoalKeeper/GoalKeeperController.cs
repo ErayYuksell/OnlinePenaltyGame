@@ -6,6 +6,7 @@ public class GoalKeeperController : MonoBehaviour
     public static GoalKeeperController Instance;
 
     [SerializeField] Animator animator;
+    [SerializeField] AnimationClip idle;
     [SerializeField] AnimationClip bodyBlockAnim;
     [SerializeField] AnimationClip bodyBlockRightAnim;
     [SerializeField] AnimationClip divingSave;
@@ -19,11 +20,17 @@ public class GoalKeeperController : MonoBehaviour
 
     PhotonView photonView;
 
+    Vector3 initialPosition;
+    Quaternion initialRotation;
+
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            initialPosition = transform.position;
+            Debug.Log("GoalkeeperInitialPos" + initialPosition);
+            initialRotation = transform.rotation;
         }
         else
         {
@@ -131,4 +138,12 @@ public class GoalKeeperController : MonoBehaviour
             return value >= min && value <= max;
         }
     }
+
+    public void ResetPosition()
+    {
+        transform.position = initialPosition; // Kalecinin baþlangýç pozisyonunu burada belirtin
+        transform.rotation = initialRotation; // Kalecinin baþlangýç rotasyonunu burada belirtin
+        animator.Play(idle.name); // Kalecinin animasyonunu baþlangýç durumuna getirin
+    }
+
 }

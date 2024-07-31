@@ -203,21 +203,28 @@ public class GameManager : MonoBehaviour
         targetObj.gameObject.SetActive(isPlayer1);
         goalkeeperAreaPanel.SetActive(!isPlayer1);
         //StartCountdown();
-    }
 
+        PlayerController.Instance.ResetPosition();
+        GoalKeeperController.Instance.ResetPosition();
+        //BallController.Instance.ResetPosition();
+        ResetBallPosition();
+    }
+    private void ResetBallPosition()
+    {
+        if (BallController.Instance != null)
+        {
+            BallController.Instance.ResetPosition();
+        }
+        else
+        {
+            Debug.LogError("BallController instance is null.");
+        }
+    }
     public void SwitchTurn()
     {
         isPlayer1Turn = !isPlayer1Turn;
         SetTurn(isPlayer1Turn);
-        //photonView.RPC("PunRPC_SetTurn", RpcTarget.All, isPlayer1Turn);
     }
-
-    //[PunRPC]
-    //void PunRPC_SetTurn(bool isPlayer1)
-    //{
-    //    SetTurn(isPlayer1);
-    //    StartCountdown(); // Yeni turn baþladýðýnda countdown tekrar baþlar
-    //}
 
     public void SetPlayer1Done()
     {
