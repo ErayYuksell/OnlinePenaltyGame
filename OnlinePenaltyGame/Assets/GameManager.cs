@@ -32,7 +32,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject shootControllPanel;
     [SerializeField] GameObject goalkeeperAreaPanel;
     PhotonView photonView;
-    bool isPlayer1Turn = true;
+    bool isPlayer1Turn = false;
+    bool isPlayer2Turn = false;
     bool ballInside = false;
     [SerializeField] TextMeshProUGUI player1ScoreText;
     [SerializeField] TextMeshProUGUI player2ScoreText;
@@ -188,20 +189,31 @@ public class GameManager : MonoBehaviour
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            SetTurn(true); // Ýlk olarak player 1 baþlatýr
+            isPlayer1Turn = true;
+            SetTurn(); // Ýlk olarak player 1 baþlatýr
         }
         else
         {
-            SetTurn(false);
+            isPlayer2Turn = true;
+            SetTurn();
         }
     }
 
-    public void SetTurn(bool isPlayer1)
+    public void SetTurn()
     {
-        isPlayer1Turn = isPlayer1;
-        shootControllPanel.SetActive(isPlayer1);
-        targetObj.gameObject.SetActive(isPlayer1);
-        goalkeeperAreaPanel.SetActive(!isPlayer1);
+        if (isPlayer1Turn)
+        {
+            shootControllPanel.SetActive(true);
+            targetObj.gameObject.SetActive(true);
+            goalkeeperAreaPanel.SetActive(false);
+        }
+        else if (isPlayer2Turn)
+        {
+            shootControllPanel.SetActive(false);
+            targetObj.gameObject.SetActive(false);
+            goalkeeperAreaPanel.SetActive(true);
+        }
+
 
         ResetPositions();
     }
@@ -215,14 +227,15 @@ public class GameManager : MonoBehaviour
 
     public void SwitchTurn()
     {
-        isPlayer1Turn = !isPlayer1Turn;
-        photonView.RPC("PunRPC_SwitchTurn", RpcTarget.All, isPlayer1Turn);
+        photonView.RPC("PunRPC_SwitchTurn", RpcTarget.All);
     }
 
     [PunRPC]
-    void PunRPC_SwitchTurn(bool isPlayer1Turn)
+    void PunRPC_SwitchTurn()
     {
-        SetTurn(isPlayer1Turn);
+        isPlayer1Turn = !isPlayer1Turn;
+        isPlayer2Turn = !isPlayer2Turn;
+        SetTurn();
     }
 
     public void SetPlayer1Done()
