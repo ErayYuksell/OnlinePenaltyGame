@@ -165,10 +165,10 @@ public class GameManager : MonoBehaviour
                 kickForce = 0.5f;
                 break;
             case "Blue":
-                kickForce = 0.7f;
+                kickForce = 0.9f;
                 break;
             case "Green":
-                kickForce = 0.5f;
+                kickForce = 0.7f;
                 break;
         }
         return kickForce = 0.5f;
@@ -202,27 +202,26 @@ public class GameManager : MonoBehaviour
         shootControllPanel.SetActive(isPlayer1);
         targetObj.gameObject.SetActive(isPlayer1);
         goalkeeperAreaPanel.SetActive(!isPlayer1);
-        //StartCountdown();
 
+        ResetPositions();
+    }
+
+    private void ResetPositions()
+    {
         PlayerController.Instance.ResetPosition();
         GoalKeeperController.Instance.ResetPosition();
-        //BallController.Instance.ResetPosition();
-        ResetBallPosition();
+        BallController.Instance.ResetPosition();
     }
-    private void ResetBallPosition()
-    {
-        if (BallController.Instance != null)
-        {
-            BallController.Instance.ResetPosition();
-        }
-        else
-        {
-            Debug.LogError("BallController instance is null.");
-        }
-    }
+
     public void SwitchTurn()
     {
         isPlayer1Turn = !isPlayer1Turn;
+        photonView.RPC("PunRPC_SwitchTurn", RpcTarget.All, isPlayer1Turn);
+    }
+
+    [PunRPC]
+    void PunRPC_SwitchTurn(bool isPlayer1Turn)
+    {
         SetTurn(isPlayer1Turn);
     }
 

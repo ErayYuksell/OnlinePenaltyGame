@@ -68,7 +68,14 @@ public class PlayerController : MonoBehaviour
 
     public void OnShootButtonPressed()
     {
-        gameManager.SetPlayer1Done();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            gameManager.SetPlayer1Done();
+        }
+        else
+        {
+            gameManager.SetPlayer2Done();
+        }
 
         // Renk bilgisi al ve iþleme devam et
         string arrowColor = gameManager.GetSliderArrowColor();
@@ -100,7 +107,8 @@ public class PlayerController : MonoBehaviour
     public void PunRPC_ShootBall(Vector3 targetPos, float kickForce)
     {
         Vector3 direction = (targetPos - ball.position).normalized;
-        ballController.KickBall(direction, 2, kickForce); // 2 high i temsil ediyor daha iyi bir degerle daha iyi goruntu cikarabilirsin 
+        Vector3 finalForce = direction * kickForce; // Final kuvveti belirleniyor
+        ballController.KickBall(targetPos, 2f, 1f, finalForce); // 2 high i temsil ediyor, 1 duration, daha iyi bir degerle daha iyi goruntu cikarabilirsin 
 
         // Animasyon tamamlandýðýnda yapýlacak iþlemler
         finalPosition = transform.position;
@@ -110,6 +118,7 @@ public class PlayerController : MonoBehaviour
         // Idle state'e geçmeden önce pozisyonu ve rotasyonu sabitle
         animator.SetBool("isIdle", true);
     }
+
 
     // Animasyon Event tarafýndan çaðrýlacak metod
     public void OnKick()

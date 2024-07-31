@@ -25,12 +25,12 @@ public class BallController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
     }
 
-    public void KickBall(Vector3 targetPosition, float height, float duration)
+    public void KickBall(Vector3 targetPosition, float height, float duration, Vector3 finalForce)
     {
-        StartCoroutine(SmoothKickBall(targetPosition, height, duration));
+        StartCoroutine(SmoothKickBall(targetPosition, height, duration, finalForce));
     }
 
-    private IEnumerator SmoothKickBall(Vector3 targetPosition, float height, float duration)
+    private IEnumerator SmoothKickBall(Vector3 targetPosition, float height, float duration, Vector3 finalForce)
     {
         rb.isKinematic = true; // Kinematic durumu açýlýyor
         Vector3 startPosition = transform.position;
@@ -41,13 +41,18 @@ public class BallController : MonoBehaviour
             // Parabolik hareket için Lerp kullanýmý
             float t = elapsedTime / duration;
             float yOffset = height * Mathf.Sin(Mathf.PI * t);
-            transform.position = Vector3.Lerp(startPosition, targetPosition, t) + new Vector3(0, yOffset, 0);
+            Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, t) + new Vector3(0, yOffset, 0);
+
+            transform.position = currentPosition;
             elapsedTime += Time.deltaTime;
             yield return null;
         }
 
         transform.position = targetPosition;
         rb.isKinematic = false; // Kinematic durumu kapatýlýyor
+
+        // Top hedef pozisyona ulaþtýktan sonra kuvvet uygulanýyor
+        rb.AddForce(finalForce, ForceMode.Impulse);
     }
 
     private void OnTriggerEnter(Collider other)
