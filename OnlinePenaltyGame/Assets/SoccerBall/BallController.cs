@@ -32,13 +32,13 @@ public class BallController : MonoBehaviour
 
     private IEnumerator SmoothKickBall(Vector3 targetPosition, float height, float duration, Vector3 finalForce)
     {
-        rb.isKinematic = true; // Kinematic durumu açýlýyor
+        rb.isKinematic = true; // Kinematic durumu aï¿½ï¿½lï¿½yor
         Vector3 startPosition = transform.position;
         float elapsedTime = 0;
 
         while (elapsedTime < duration)
         {
-            // Parabolik hareket için Lerp kullanýmý
+            // Parabolik hareket iï¿½in Lerp kullanï¿½mï¿½
             float t = elapsedTime / duration;
             float yOffset = height * Mathf.Sin(Mathf.PI * t);
             Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, t) + new Vector3(0, yOffset, -1);
@@ -49,9 +49,9 @@ public class BallController : MonoBehaviour
         }
 
         transform.position = targetPosition;
-        rb.isKinematic = false; // Kinematic durumu kapatýlýyor
+        rb.isKinematic = false; // Kinematic durumu kapatï¿½lï¿½yor
 
-        // Top hedef pozisyona ulaþtýktan sonra kuvvet uygulanýyor
+        // Top hedef pozisyona ulaï¿½tï¿½ktan sonra kuvvet uygulanï¿½yor
         rb.AddForce(finalForce, ForceMode.Impulse);
     }
 
@@ -65,16 +65,7 @@ public class BallController : MonoBehaviour
 
     public void ResetPosition()
     {
-        if (rb == null)
-        {
-            rb = GetComponent<Rigidbody>(); // Emin olun ki rb null deðil
-        }
-
-        rb.isKinematic = false; // Kinematic durumu kapatýlýyor
-        rb.velocity = Vector3.zero; // Topun hareketini durdurun
-        rb.angularVelocity = Vector3.zero; // Topun dönme hareketini durdurun
-        transform.position = initialPosition; // Topun baþlangýç pozisyonunu burada belirtin
-        rb.isKinematic = true; // Kinematic durumu tekrar açýlýyor
+        transform.position = initialPosition; // BaÅŸlangÄ±Ã§ pozisyonu
     }
 
 }

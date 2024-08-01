@@ -12,7 +12,7 @@ public class GoalKeeperController : MonoBehaviour
     [SerializeField] AnimationClip divingSave;
     [SerializeField] AnimationClip divingRightSave;
     [SerializeField] AnimationClip catchAnim;
-    [SerializeField] Transform yellowAreaParentTransform; // Sarý alaný temsil eden transform
+    [SerializeField] Transform yellowAreaParentTransform; // Sarï¿½ alanï¿½ temsil eden transform
 
     private Vector3 finalPosition;
     private Quaternion finalRotation;
@@ -100,7 +100,7 @@ public class GoalKeeperController : MonoBehaviour
         if (yellowAreaRotationZ > 180) yellowAreaRotationZ -= 360;
         Debug.Log(yellowAreaRotationZ);
 
-        // Sarý alanýn dönüþ açýsýna göre animasyonlarý belirle
+        // Sarï¿½ alanï¿½n dï¿½nï¿½ï¿½ aï¿½ï¿½sï¿½na gï¿½re animasyonlarï¿½ belirle
         if (IsInRange(yellowAreaRotationZ, -20, 20))
         {
             PlayCatch();
@@ -129,21 +129,18 @@ public class GoalKeeperController : MonoBehaviour
         }
         else
         {
-            PlayCatch(); // Varsayýlan animasyon
+            PlayCatch(); // Varsayï¿½lan animasyon
         }
 
-        // Belirtilen aralýkta olup olmadýðýný kontrol eden yardýmcý metot
+        // Belirtilen aralï¿½kta olup olmadï¿½ï¿½ï¿½nï¿½ kontrol eden yardï¿½mcï¿½ metot
         bool IsInRange(float value, float min, float max)
         {
             return value >= min && value <= max;
         }
     }
-
     public void ResetPosition()
     {
-        transform.position = initialPosition; // Kalecinin baþlangýç pozisyonunu burada belirtin
-        transform.rotation = initialRotation; // Kalecinin baþlangýç rotasyonunu burada belirtin
-        animator.Play(idle.name); // Kalecinin animasyonunu baþlangýç durumuna getirin
+        transform.position = initialPosition; // BaÅŸlangÄ±Ã§ pozisyonu
     }
 
 }

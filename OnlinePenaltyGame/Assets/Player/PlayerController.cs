@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
 
         if (!photonView.IsMine)
         {
-            // Eðer bu obje yerel oyuncuya ait deðilse, ShootControl panelini kapat.
+            // Eï¿½er bu obje yerel oyuncuya ait deï¿½ilse, ShootControl panelini kapat.
             GameObject shootControlPanel = GameObject.Find("ShootControl");
             if (shootControlPanel != null)
             {
@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
             gameManager.SetPlayer2Done();
         }
 
-        // Renk bilgisi al ve iþleme devam et
+        // Renk bilgisi al ve iï¿½leme devam et
         string arrowColor = gameManager.GetSliderArrowColor();
         Debug.Log("Slider Arrow Color: " + arrowColor);
         gameManager.StopSliderArrowMovement(out Vector3 arrowPos);
@@ -113,24 +113,24 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Top hareketi basladi");
 
 
-        // Animasyon tamamlandýðýnda yapýlacak iþlemler
+        // Animasyon tamamlandï¿½ï¿½ï¿½nda yapï¿½lacak iï¿½lemler
         finalPosition = transform.position;
         finalRotation = transform.rotation;
         animationFinished = true;
 
-        // Idle state'e geçmeden önce pozisyonu ve rotasyonu sabitle
+        // Idle state'e geï¿½meden ï¿½nce pozisyonu ve rotasyonu sabitle
         animator.SetBool("isIdle", true);
     }
 
 
-    // Animasyon Event tarafýndan çaðrýlacak metod
+    // Animasyon Event tarafï¿½ndan ï¿½aï¿½rï¿½lacak metod
     public void OnKick()
     {
-        // Topa vurma iþlemini tüm oyunculara senkronize et
+        // Topa vurma iï¿½lemini tï¿½m oyunculara senkronize et
         photonView.RPC("PunRPC_ShootBall", RpcTarget.All, targetPosition, gameManager.BallMovementForceByColor());
     }
 
-    // Animasyonun sonunda çaðrýlacak metod
+    // Animasyonun sonunda ï¿½aï¿½rï¿½lacak metod
     public void OnAnimationComplete()
     {
         finalPosition = transform.position;
@@ -141,9 +141,7 @@ public class PlayerController : MonoBehaviour
 
     public void ResetPosition()
     {
-        transform.position = initialPosition; // Oyuncunun baþlangýç pozisyonunu burada belirtin
-        transform.rotation = initialRotation; // Oyuncunun baþlangýç rotasyonunu burada belirtin
-        animator.Play(idle.name); // Oyuncunun animasyonunu baþlangýç durumuna getirin
+        transform.position = initialPosition; // BaÅŸlangÄ±Ã§ pozisyonu
     }
 
 }
