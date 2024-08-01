@@ -28,9 +28,9 @@ public class GoalKeeperController : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            initialPosition = transform.position;
-            Debug.Log("GoalkeeperInitialPos" + initialPosition);
-            initialRotation = transform.rotation;
+            initialPosition = transform.position; // Başlangıç pozisyonunu kaydet
+            initialRotation = transform.rotation; // Başlangıç rotasyonunu kaydet
+            Debug.Log("GoalkeeperInitialPos: " + initialPosition);
         }
         else
         {
@@ -140,7 +140,12 @@ public class GoalKeeperController : MonoBehaviour
     }
     public void ResetPosition()
     {
-        transform.position = initialPosition; // Başlangıç pozisyonu
+        transform.position = initialPosition; // Başlangıç pozisyonuna sıfırla
+        transform.rotation = initialRotation; // Başlangıç rotasyonuna sıfırla
+        animator.SetBool("Goalkeeper Idle", true); // İdle durumuna geç
+        Debug.Log("Kaleci pozisyonu ve rotasyonu sıfırlandı.");
     }
+
+
 
 }

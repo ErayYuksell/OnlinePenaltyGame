@@ -141,7 +141,9 @@ public class PlayerController : MonoBehaviour
 
     public void ResetPosition()
     {
-        transform.position = initialPosition; // Başlangıç pozisyonu
+        transform.position = initialPosition; // Başlangıç pozisyonuna sıfırla
+        transform.rotation = initialRotation; // Başlangıç rotasyonuna sıfırla
+        Debug.Log("Kaleci pozisyonu ve rotasyonu sıfırlandı.");
     }
 
 }

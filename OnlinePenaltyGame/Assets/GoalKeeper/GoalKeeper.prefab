@@ -287,6 +287,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: -3688075569383006866}
+  idle: {fileID: 7400000, guid: d40c156f6b9a4c3488ef9dcc9d244e74, type: 2}
   bodyBlockAnim: {fileID: 7400000, guid: 031b227d77501d143b3e0abc03ac6ec1, type: 2}
   bodyBlockRightAnim: {fileID: 7400000, guid: c0d43925d07252d4f8800381fa7b4590, type: 2}
   divingSave: {fileID: 7400000, guid: 56c689c7bdcfbd74c99e0eb72ec47371, type: 2}

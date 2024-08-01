@@ -244,12 +244,13 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     void PunRPC_SwitchTurn()
     {
-
-        print("sıra değişti");
+        Debug.Log("Sıra değişti");
         isPlayer1Turn = !isPlayer1Turn;
         isPlayer2Turn = !isPlayer2Turn;
         SetTurn();
+        ResetPositions(); // Her tur değişiminde pozisyonları sıfırla
     }
+
 
     public void SetPlayer1Done()
     {
