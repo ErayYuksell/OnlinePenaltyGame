@@ -68,11 +68,11 @@ public class PlayerController : MonoBehaviour
 
     public void OnShootButtonPressed()
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (gameManager.GetPlayer1TurnInfo())
         {
             gameManager.SetPlayer1Done();
         }
-        else
+        else if (gameManager.GetPlayer2TurnInfo())
         {
             gameManager.SetPlayer2Done();
         }
@@ -96,6 +96,7 @@ public class PlayerController : MonoBehaviour
     {
         // Animasyonu oynat
         animator.Play(penaltyKickAnim.name);
+        Debug.Log("Penalty Anim calisti");
         animationFinished = false;
 
 
@@ -109,6 +110,8 @@ public class PlayerController : MonoBehaviour
         Vector3 direction = (targetPos - ball.position).normalized;
         Vector3 finalForce = direction * kickForce; // Final kuvveti belirleniyor
         ballController.KickBall(targetPos, 2f, 1f, finalForce); // 2 high i temsil ediyor, 1 duration, daha iyi bir degerle daha iyi goruntu cikarabilirsin 
+        Debug.Log("Top hareketi basladi");
+
 
         // Animasyon tamamlandýðýnda yapýlacak iþlemler
         finalPosition = transform.position;

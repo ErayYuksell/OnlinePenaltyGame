@@ -41,7 +41,7 @@ public class BallController : MonoBehaviour
             // Parabolik hareket için Lerp kullanýmý
             float t = elapsedTime / duration;
             float yOffset = height * Mathf.Sin(Mathf.PI * t);
-            Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, t) + new Vector3(0, yOffset, 0);
+            Vector3 currentPosition = Vector3.Lerp(startPosition, targetPosition, t) + new Vector3(0, yOffset, -1);
 
             transform.position = currentPosition;
             elapsedTime += Time.deltaTime;

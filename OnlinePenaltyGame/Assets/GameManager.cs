@@ -217,6 +217,14 @@ public class GameManager : MonoBehaviour
 
         ResetPositions();
     }
+    public bool GetPlayer1TurnInfo()
+    {
+        return isPlayer1Turn;
+    }
+    public bool GetPlayer2TurnInfo()
+    {
+        return isPlayer2Turn;
+    }
 
     private void ResetPositions()
     {
