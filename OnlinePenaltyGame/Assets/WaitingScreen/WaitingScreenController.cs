@@ -23,7 +23,6 @@ public class WaitingScreenController : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.PlayerList.Length == 2)
         {
-            player2Image.gameObject.SetActive(true);
             photonView.RPC("PunRPC_CountdownTimer", RpcTarget.All);
         }
         else
@@ -35,6 +34,8 @@ public class WaitingScreenController : MonoBehaviourPunCallbacks
     [PunRPC]
     IEnumerator PunRPC_CountdownTimer()
     {
+        player2Image.gameObject.SetActive(true);
+
         while (!timeExpired)
         {
             if (countdownTime <= 0)

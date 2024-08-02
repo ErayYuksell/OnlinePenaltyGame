@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18028326, g: 0.22571333, b: 0.30692202, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3473,10 +3473,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -5321707570962637756, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
-      propertyPath: idle
-      value: 
-      objectReference: {fileID: 7400000, guid: d40c156f6b9a4c3488ef9dcc9d244e74, type: 2}
-    - target: {fileID: -5321707570962637756, guid: 07e73cb336c56d748bc0be5a5d27b781, type: 3}
       propertyPath: yellowAreaParentTransform
       value: 
       objectReference: {fileID: 608904392}
@@ -3565,10 +3561,6 @@ PrefabInstance:
       propertyPath: goal
       value: 
       objectReference: {fileID: 3041569440530984579}
-    - target: {fileID: -5889960136650267035, guid: 719c417b36539214ea63a47640f60f03, type: 3}
-      propertyPath: idle
-      value: 
-      objectReference: {fileID: 7400000, guid: 0aaebc4fc514c264b8bc295292a6d7f2, type: 2}
     - target: {fileID: -5889960136650267035, guid: 719c417b36539214ea63a47640f60f03, type: 3}
       propertyPath: ballController
       value: 

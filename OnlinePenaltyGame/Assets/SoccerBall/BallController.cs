@@ -54,7 +54,7 @@ public class BallController : MonoBehaviour
         rb.isKinematic = false; // Kinematic durumu kapat�l�yor
 
         // Top hedef pozisyona ula�t�ktan sonra kuvvet uygulan�yor
-        rb.AddForce(finalForce, ForceMode.Impulse);
+        //rb.AddForce(finalForce, ForceMode.Impulse);
     }
 
     private void OnTriggerEnter(Collider other)

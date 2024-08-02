@@ -142,7 +142,7 @@ public class GoalKeeperController : MonoBehaviour
     {
         transform.position = initialPosition; // Başlangıç pozisyonuna sıfırla
         transform.rotation = initialRotation; // Başlangıç rotasyonuna sıfırla
-        animator.SetBool("Goalkeeper Idle", true); // İdle durumuna geç
+        animator.Play(idle.name); // İdle durumuna geç
         Debug.Log("Kaleci pozisyonu ve rotasyonu sıfırlandı.");
     }
 
