@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using Photon.Pun;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -137,6 +138,14 @@ public class PlayerController : MonoBehaviour
         finalRotation = transform.rotation;
         animationFinished = true;
         animator.Play(idle.name);
+
+        //StartCoroutine(BallNotInside());
+    }
+
+    IEnumerator BallNotInside()
+    {
+        yield return new WaitForSeconds(0.5f);
+        GameManager.Instance.BallNotInside();
     }
 
     public void ResetPosition()

@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] RectTransform greenImage;
     public enum ShootColors { red, green, blue }
     public ShootColors shootColors;
-
     float kickForce;
     [Header("Photon")]
     [SerializeField] GameObject shootControllPanel;
@@ -40,11 +39,9 @@ public class GameManager : MonoBehaviour
     int player1Score = 0;
     int player2Score = 0;
     [SerializeField] TextMeshProUGUI countdownText; // Yeni de�i�ken eklendi
-    int countdownTimer = 10;
-    bool isCountdownRunning = false; // Saya� durumunu takip eden de�i�ken
     bool isPlayer1Done = false;
     bool isPlayer2Done = false;
-    bool isGoal = false;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -218,7 +215,7 @@ public class GameManager : MonoBehaviour
             goalkeeperAreaPanel.SetActive(true);
         }
 
-        ResetPositions();
+        //ResetPositions();
     }
     public bool GetPlayer1TurnInfo()
     {
@@ -232,19 +229,24 @@ public class GameManager : MonoBehaviour
     private void ResetPositions()
     {
         Debug.Log("Pozisyonlar sıfırlanıyor..." + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
-        isGoal = false;
+        BallController.Instance.ResetPosition();
         PlayerController.Instance.ResetPosition();
         GoalKeeperController.Instance.ResetPosition();
-        BallController.Instance.ResetPosition();
     }
 
     public void SwitchTurn()
     {
-        if (!isGoal)
+        if (ballInside) // Sadece bir kez çağrılması için kontrol ekle
         {
-            isGoal = true;
+            ballInside = false; // Turn değişikliği yapıldığı anda sıfırlanması gerektiğinden
             print("Sıra değişiyor" + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
-            photonView.RPC("PunRPC_SwitchTurn", RpcTarget.All);
+
+            isPlayer1Turn = !isPlayer1Turn;
+            isPlayer2Turn = !isPlayer2Turn;
+            ResetPositions();
+            SetTurn();
+
+            //photonView.RPC("PunRPC_SwitchTurn", RpcTarget.All);
         }
     }
 
@@ -252,14 +254,12 @@ public class GameManager : MonoBehaviour
     void PunRPC_SwitchTurn()
     {
         Debug.Log("Sıra değişti" + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
-        isPlayer1Turn = !isPlayer1Turn;
-        isPlayer2Turn = !isPlayer2Turn;
-        SetTurn();
+        //isPlayer1Turn = !isPlayer1Turn;
+        //isPlayer2Turn = !isPlayer2Turn;
+        //SetTurn();
         ResetPositions(); // Her tur değişiminde pozisyonları sıfırla
-
-        //ChooseRandomPoint();
-        //MovementSliderArrow();
     }
+
 
 
     public void SetPlayer1Done()
@@ -333,6 +333,8 @@ public class GameManager : MonoBehaviour
 
     public void UpdateScore()
     {
+        if (ballInside) return; // Birden fazla çağrıyı engelle
+
         if (isPlayer1Turn)
         {
             player1Score++;
@@ -343,22 +345,28 @@ public class GameManager : MonoBehaviour
             player2Score++;
             Debug.Log("Player2score: " + player2Score + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
         }
+
+        ballInside = true; // ballInside değerini true yap
         UpdateScoreText();
-        ballInside = true;
-        //StopCountdown(); // Skor g�ncellendi�inde saya� durdurulur
-        SwitchTurn(); // Tur ge�i�i yap�l�r
+        SwitchTurn(); // Tur geçişi yapılır
     }
 
     public void BallNotInside()
     {
+        if (ballInside) return; // Birden fazla çağrıyı engelle
+
         if (!ballInside)
         {
             isPlayer1Turn = !isPlayer1Turn;
-            //StopCountdown(); // Saya� durduruldu
-            SwitchTurn(); // Yeni saya� ba�lat�ld� ve tur de�i�tirildi
+            isPlayer2Turn = !isPlayer2Turn;
+            ballInside = true;
+            SwitchTurn(); // Yeni sayaç başlatıldı ve tur değiştirildi
         }
     }
-
+    public bool IsBallInside()
+    {
+        return ballInside;
+    }
     void UpdateScoreText()
     {
         photonView.RPC("PunRPC_UpdateScoreText", RpcTarget.All);

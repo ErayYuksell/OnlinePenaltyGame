@@ -58,16 +58,20 @@ public class BallController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("SoccerGoal"))
+        if (other.CompareTag("SoccerGoal") && !GameManager.Instance.IsBallInside())
         {
+            GetComponent<SphereCollider>().enabled = false;
+            Debug.Log("Top Aglarda");
             GameManager.Instance.UpdateScore();
         }
     }
 
     public void ResetPosition()
-    { 
+    {
+
         transform.position = initialPosition; // Başlangıç pozisyonuna sıfırla
         transform.rotation = initialRotation; // Başlangıç rotasyonuna sıfırla
+        //GetComponent<SphereCollider>().enabled = true;
         //Debug.Log("Top pozisyonu sıfırlandı.");
     }
 
