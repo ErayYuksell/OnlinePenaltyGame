@@ -30,7 +30,7 @@ public class GoalKeeperController : MonoBehaviour
             Instance = this;
             initialPosition = transform.position; // Başlangıç pozisyonunu kaydet
             initialRotation = transform.rotation; // Başlangıç rotasyonunu kaydet
-            Debug.Log("GoalkeeperInitialPos: " + initialPosition);
+            //Debug.Log("GoalkeeperInitialPos: " + initialPosition);
         }
         else
         {
@@ -98,7 +98,7 @@ public class GoalKeeperController : MonoBehaviour
     {
         float yellowAreaRotationZ = yellowAreaParentTransform.localEulerAngles.z;
         if (yellowAreaRotationZ > 180) yellowAreaRotationZ -= 360;
-        Debug.Log(yellowAreaRotationZ);
+        //Debug.Log(yellowAreaRotationZ);
 
         // Sar� alan�n d�n�� a��s�na g�re animasyonlar� belirle
         if (IsInRange(yellowAreaRotationZ, -20, 20))
@@ -143,7 +143,7 @@ public class GoalKeeperController : MonoBehaviour
         transform.position = initialPosition; // Başlangıç pozisyonuna sıfırla
         transform.rotation = initialRotation; // Başlangıç rotasyonuna sıfırla
         animator.Play(idle.name); // İdle durumuna geç
-        Debug.Log("Kaleci pozisyonu ve rotasyonu sıfırlandı.");
+        //Debug.Log("Kaleci pozisyonu ve rotasyonu sıfırlandı.");
     }
 
 

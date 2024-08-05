@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Animator animator;
     [SerializeField] AnimationClip penaltyKickAnim;
     [SerializeField] AnimationClip idle;
+    [SerializeField] AnimationClip offensiveIdle;
     [SerializeField] Transform ball;
     [SerializeField] Transform goal;
 
@@ -32,7 +33,6 @@ public class PlayerController : MonoBehaviour
         {
             Instance = this;
             initialPosition = transform.position;
-            Debug.Log("PlayerInitialPos" + initialPosition);
             initialRotation = transform.rotation;
         }
         else
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
 
         // Renk bilgisi al ve i�leme devam et
         string arrowColor = gameManager.GetSliderArrowColor();
-        Debug.Log("Slider Arrow Color: " + arrowColor);
+        Debug.Log("Slider Arrow Color: " + arrowColor + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
         gameManager.StopSliderArrowMovement(out Vector3 arrowPos);
 
         // targetImage hareketini durdur ve pozisyon bilgisini al
@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
     {
         // Animasyonu oynat
         animator.Play(penaltyKickAnim.name);
-        Debug.Log("Penalty Anim calisti");
+        Debug.Log("Penalty Animasyonu calisti" + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
         animationFinished = false;
 
 
@@ -110,7 +110,7 @@ public class PlayerController : MonoBehaviour
         Vector3 direction = (targetPos - ball.position).normalized;
         Vector3 finalForce = direction * kickForce; // Final kuvveti belirleniyor
         ballController.KickBall(targetPos, 2f, 1f, finalForce); // 2 high i temsil ediyor, 1 duration, daha iyi bir degerle daha iyi goruntu cikarabilirsin 
-        Debug.Log("Top hareketi basladi");
+        Debug.Log("Top hareketi basladi" + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
 
 
         // Animasyon tamamland���nda yap�lacak i�lemler
@@ -119,7 +119,7 @@ public class PlayerController : MonoBehaviour
         animationFinished = true;
 
         // Idle state'e ge�meden �nce pozisyonu ve rotasyonu sabitle
-        animator.SetBool("isIdle", true);
+        animator.Play(idle.name);
     }
 
 
@@ -136,14 +136,16 @@ public class PlayerController : MonoBehaviour
         finalPosition = transform.position;
         finalRotation = transform.rotation;
         animationFinished = true;
-        animator.SetBool("isIdle", true);
+        animator.Play(idle.name);
     }
 
     public void ResetPosition()
     {
         transform.position = initialPosition; // Başlangıç pozisyonuna sıfırla
         transform.rotation = initialRotation; // Başlangıç rotasyonuna sıfırla
-        Debug.Log("Kaleci pozisyonu ve rotasyonu sıfırlandı.");
+
+        animator.Play(offensiveIdle.name);
+        //Debug.Log("Kaleci pozisyonu ve rotasyonu sıfırlandı.");
     }
 
 }

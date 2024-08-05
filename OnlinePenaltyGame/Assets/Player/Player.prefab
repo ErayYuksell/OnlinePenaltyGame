@@ -430,7 +430,8 @@ MonoBehaviour:
   goalKeeperController: {fileID: 0}
   animator: {fileID: 1796292514563452994}
   penaltyKickAnim: {fileID: 7400000, guid: b8e7fb0585dd6d2428a1998c634f7ac3, type: 2}
-  idle: {fileID: 7400000, guid: 0aaebc4fc514c264b8bc295292a6d7f2, type: 2}
+  idle: {fileID: 7400000, guid: cc87a1050ca293643b8b73e434218295, type: 2}
+  offensiveIdle: {fileID: 7400000, guid: 0aaebc4fc514c264b8bc295292a6d7f2, type: 2}
   ball: {fileID: 0}
   goal: {fileID: 0}
 --- !u!114 &2328189453212400907

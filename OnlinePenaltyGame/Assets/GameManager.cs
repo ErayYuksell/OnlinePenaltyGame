@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     bool isCountdownRunning = false; // Saya� durumunu takip eden de�i�ken
     bool isPlayer1Done = false;
     bool isPlayer2Done = false;
-
+    bool isGoal = false;
     private void Awake()
     {
         if (Instance == null)
@@ -190,11 +190,13 @@ public class GameManager : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             isPlayer1Turn = true;
+            Debug.Log("MasterClient " + isPlayer1Turn);
             SetTurn(); // �lk olarak player 1 ba�lat�r
         }
         else
         {
             isPlayer2Turn = true;
+            Debug.Log("Other Client " + isPlayer2Turn);
             SetTurn();
         }
     }
@@ -203,14 +205,14 @@ public class GameManager : MonoBehaviour
     {
         if (isPlayer1Turn)
         {
-            Debug.Log("Player 1'in sırası.");
+            Debug.Log("Player 1'in sırası. " + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
             shootControllPanel.SetActive(true);
             targetObj.gameObject.SetActive(true);
             goalkeeperAreaPanel.SetActive(false);
         }
         else if (isPlayer2Turn)
         {
-            Debug.Log("Player 2'nin sırası.");
+            Debug.Log("Player 2'nin sırası. " + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
             shootControllPanel.SetActive(false);
             targetObj.gameObject.SetActive(false);
             goalkeeperAreaPanel.SetActive(true);
@@ -229,7 +231,8 @@ public class GameManager : MonoBehaviour
 
     private void ResetPositions()
     {
-        Debug.Log("Pozisyonlar sıfırlanıyor...");
+        Debug.Log("Pozisyonlar sıfırlanıyor..." + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
+        isGoal = false;
         PlayerController.Instance.ResetPosition();
         GoalKeeperController.Instance.ResetPosition();
         BallController.Instance.ResetPosition();
@@ -237,18 +240,25 @@ public class GameManager : MonoBehaviour
 
     public void SwitchTurn()
     {
-        print("Sıra değişiyor");
-        photonView.RPC("PunRPC_SwitchTurn", RpcTarget.All);
+        if (!isGoal)
+        {
+            isGoal = true;
+            print("Sıra değişiyor" + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
+            photonView.RPC("PunRPC_SwitchTurn", RpcTarget.All);
+        }
     }
 
     [PunRPC]
     void PunRPC_SwitchTurn()
     {
-        Debug.Log("Sıra değişti");
+        Debug.Log("Sıra değişti" + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
         isPlayer1Turn = !isPlayer1Turn;
         isPlayer2Turn = !isPlayer2Turn;
         SetTurn();
         ResetPositions(); // Her tur değişiminde pozisyonları sıfırla
+
+        //ChooseRandomPoint();
+        //MovementSliderArrow();
     }
 
 
@@ -290,7 +300,7 @@ public class GameManager : MonoBehaviour
     void PunRPC_StartShooting()
     {
         // Her iki oyuncu da haz�rsa, shoot ve kaleci animasyonlar� ayn� anda ba�lar.
-        Debug.Log("Şut ve kaleci animasyonları başlıyor.");
+        //Debug.Log("Şut ve kaleci animasyonları başlıyor.");
         PlayerController.Instance.StartShooting();
         GoalKeeperController.Instance.StartSaving();
         isPlayer1Done = false;
@@ -298,16 +308,40 @@ public class GameManager : MonoBehaviour
     }
 
     #region ScoreSection
+    //public void UpdateScore()
+    //{
+    //    photonView.RPC("PunRPC_UpdateScore", RpcTarget.All);
+    //}
+
+    //[PunRPC]
+    //void PunRPC_UpdateScore()
+    //{
+    //    if (isPlayer1Turn)
+    //    {
+    //        player1Score++;
+    //    }
+    //    else
+    //    {
+    //        player2Score++;
+    //    }
+    //    UpdateScoreText();
+    //    ballInside = true;
+    //    //StopCountdown(); // Skor g�ncellendi�inde saya� durdurulur
+    //    SwitchTurn(); // Tur ge�i�i yap�l�r
+    //}
+
 
     public void UpdateScore()
     {
         if (isPlayer1Turn)
         {
             player1Score++;
+            Debug.Log("Player1score: " + player1Score + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
         }
         else
         {
             player2Score++;
+            Debug.Log("Player2score: " + player2Score + "_ActorNumber: " + PhotonNetwork.LocalPlayer.ActorNumber);
         }
         UpdateScoreText();
         ballInside = true;
@@ -326,6 +360,12 @@ public class GameManager : MonoBehaviour
     }
 
     void UpdateScoreText()
+    {
+        photonView.RPC("PunRPC_UpdateScoreText", RpcTarget.All);
+    }
+
+    [PunRPC]
+    void PunRPC_UpdateScoreText()
     {
         player1ScoreText.text = player1Score.ToString();
         player2ScoreText.text = player2Score.ToString();

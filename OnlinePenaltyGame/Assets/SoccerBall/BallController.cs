@@ -7,7 +7,6 @@ public class BallController : MonoBehaviour
     private Rigidbody rb;
     private Vector3 initialPosition;
     Quaternion initialRotation;
-
     private void Awake()
     {
         if (Instance == null)
@@ -66,10 +65,10 @@ public class BallController : MonoBehaviour
     }
 
     public void ResetPosition()
-    {
+    { 
         transform.position = initialPosition; // Başlangıç pozisyonuna sıfırla
         transform.rotation = initialRotation; // Başlangıç rotasyonuna sıfırla
-        Debug.Log("Top pozisyonu sıfırlandı.");
+        //Debug.Log("Top pozisyonu sıfırlandı.");
     }
 
 
